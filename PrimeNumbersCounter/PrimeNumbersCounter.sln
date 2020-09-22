@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.30503.244
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrimeNumbersCounter", "PrimeNumbersCounter\PrimeNumbersCounter.csproj", "{B7A7B788-A995-448B-A76D-EC45C3AEAA4F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HttpServer", "HttpServer\HttpServer.csproj", "{CF108017-BCA4-4833-97EF-CD430EBDCCC9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{B7A7B788-A995-448B-A76D-EC45C3AEAA4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B7A7B788-A995-448B-A76D-EC45C3AEAA4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B7A7B788-A995-448B-A76D-EC45C3AEAA4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF108017-BCA4-4833-97EF-CD430EBDCCC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF108017-BCA4-4833-97EF-CD430EBDCCC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF108017-BCA4-4833-97EF-CD430EBDCCC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF108017-BCA4-4833-97EF-CD430EBDCCC9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
