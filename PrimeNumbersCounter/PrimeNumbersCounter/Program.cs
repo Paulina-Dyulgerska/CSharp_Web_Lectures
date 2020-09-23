@@ -413,7 +413,7 @@ namespace PrimeNumbersCounter
     }
     class DownloadingVicWithTasks
     {
-        static void Main()
+        static void MainP()
         {
             Stopwatch sw = Stopwatch.StartNew();
 
@@ -451,6 +451,65 @@ namespace PrimeNumbersCounter
             //za 4.3 s. pyrviqt pyt i za 1.8 s. vtoriqt pyt se svaliha tezi 101 stranici s tasks.
         }
 
+        static async Task DownloadAsync(string url)
+        {
+            HttpClient httpClient = new HttpClient();
+            //var token = new CancellationToken();
+            var httpResponse = await httpClient.GetAsync(url/*, token*/);
+            //     A cancellation token that can be used by other objects or threads to receive
+            //     notice of cancellation.
+            var vic = await httpResponse.Content.ReadAsStringAsync();
+            Console.WriteLine(vic.Length);
+        }
+    }
+    class DownloadingVicWithTasksBeforeAsyncAndAwait
+    {
+        static void Main()
+        {
+            Stopwatch sw = Stopwatch.StartNew();
+
+            List<Task> tasks = new List<Task>();
+
+            for (int i = 0; i <= 100; i++)
+            {
+                string url = $"https://vicove.com/vic-{i}";
+                Task task = Task.Run(async () => { await DownloadAsync(url); });
+                tasks.Add(task);
+            }
+
+            Task.WaitAll(tasks.ToArray()); //chakam vsichki da svyrshtat, predi da prodylja nadolu.
+
+            Console.WriteLine(sw.Elapsed);
+
+            Console.ReadLine();
+
+            //za 6 secundi mi svali tezi 101 stranici bez threads.
+            //za 4.3 secundi se svaliha tezi 101 stranici s threads.
+            //za 1.6 s. se svaliha tezi 101 stranici s tasks s methoda now.
+            //za 3.5 s. se svaliha tezi 101 stranici s tasks s methoda before
+
+        }
+
+        ////before:
+        //static async Task DownloadAsync(string url)
+        //{
+        //    HttpClient httpClient = new HttpClient();
+        //    httpClient.GetAsync(url).ContinueWith((httpResponse) =>
+        //     {
+        //         httpResponse.Result.Content.ReadAsStringAsync().ContinueWith((vic) =>
+        //         {
+        //             Console.WriteLine(vic.Result.Length);
+        //         });
+        //     });
+
+        //    //vsichko sled ContinueWith(....) se naricha promise, t.e. promise e method, kojto mu
+        //    //podawam, kato tozi method shte se izpylni, sled kato predhodniqt e gotov. Tuk:
+        //    //sled kato se izpylni GetAsync(url), az mu obeshtvam, dawam mu nov method, po kojto
+        //    //da raboti - httpResponse.Result.Content.ReadAsStringAsync(), a sled kato posledniqt
+        //    //se izpylni, az mu dawam treti method, kojto da se izpylni - Console.WriteLine(vic.Result.Length)
+        //}
+
+        //now:
         static async Task DownloadAsync(string url)
         {
             HttpClient httpClient = new HttpClient();
