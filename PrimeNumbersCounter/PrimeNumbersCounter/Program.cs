@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
@@ -464,7 +465,7 @@ namespace PrimeNumbersCounter
     }
     class DownloadingVicWithTasksBeforeAsyncAndAwait
     {
-        static void Main()
+        static void MainP()
         {
             Stopwatch sw = Stopwatch.StartNew();
 
@@ -516,6 +517,121 @@ namespace PrimeNumbersCounter
             var httpResponse = await httpClient.GetAsync(url);
             var vic = await httpResponse.Content.ReadAsStringAsync();
             Console.WriteLine(vic.Length);
+        }
+    }
+    class DownloadingVicWithTasksAndWorkflowChecking
+    {
+        static int count = 0;
+        static void Main()
+        {
+            Stopwatch sw = Stopwatch.StartNew();
+
+            List<Task> tasks = new List<Task>();
+
+            for (int i = 0; i <= 1; i++)
+            {
+                string url = $"https://vicove.com/vic-{i}";
+                Task task = Task.Run(async () =>
+                {
+                    await DownloadAsync(url, i);
+                });
+                tasks.Add(task);
+            }
+
+            Task.WaitAll(tasks.ToArray()); //chakam vsichki da svyrshtat, predi da prodylja nadolu.
+
+            Console.WriteLine(sw.Elapsed);
+
+        }
+
+        static async Task DownloadAsync(string url, int i)
+        {
+            //count++;
+            Console.WriteLine($"Start------------------------------------{i}");
+            await Task.Run(() => { //ako nqma await, tozi task nikoj nqma da go chaka da se naraboti, 
+                //a prosto Main() shte priklyuchi rabota!
+                Console.WriteLine("In first await");
+                Console.ReadLine();
+            });
+
+            HttpClient httpClient = new HttpClient();
+            Console.WriteLine($"Before GetAsync - {i}");
+            var httpResponse = await httpClient.GetAsync(url/*, token*/);
+            Console.WriteLine($"Before ReadAsStringAsync - {i}");
+            var vic = await httpResponse.Content.ReadAsStringAsync();
+            Console.WriteLine(vic.Length);
+            Console.WriteLine($"End---------------------------------------{i}");
+        }
+    }
+
+    class AsyncAwaitBuildinMethods
+    {
+        //Build-in Async Methods: Get Async:
+        //Download a file without blocking the console interface:
+        public static async Task GetAsync(string uri = "https://httpbin.org/get")
+        {
+            using (HttpClient client = new HttpClient()) //Base class for sending HTTP requests and receiving HTTP responses
+            {
+                using (var r = await client.GetAsync(new Uri(uri))) //Sends a GET request to the specified Uri
+                {
+                    string result = await r.Content.ReadAsStringAsync();  //r.Content is Base class representing an HTTP entity body and content headers
+                    Console.WriteLine(result);
+                }
+            }
+        }
+
+        //Build-in Async Methods: Post Async:
+        //Download a file without blocking the console interface:
+        public static async Task PostAsync(string url, string data)
+        {
+            HttpClient client = new HttpClient();
+
+            StringContent queryString = new StringContent(data);
+
+            var response = await client.PostAsync(new Uri(url), queryString);
+
+            string responseBody = await response.Content.ReadAsStringAsync();
+
+            Console.WriteLine(responseBody);
+        }
+
+        //Build-in Async Methods: GetStringAsync:
+        //Download the HTML of a given URL
+        static async Task<string> GetWebsiteHtmlAsync(string websiteUrl)
+        {
+            HttpClient client = new HttpClient();
+
+            string websiteHtml = await client.GetStringAsync(websiteUrl);
+
+            Console.WriteLine("Downloaded html");
+
+            return websiteHtml;
+        }
+
+        //Build-in Async Methods: ReadAsync:
+        //Read a file without blocking the console interface
+        public static async Task<string> ReadFileAsync(string filename)
+        {
+            byte[] result;
+            Console.WriteLine("Reading...");
+            using (FileStream reader = File.Open(filename, FileMode.Open))
+            {
+                result = new byte[reader.Length];
+                await reader.ReadAsync(result, 0, (int)reader.Length);
+                Console.WriteLine("File readed");
+            }
+            return System.Text.Encoding.UTF8.GetString(result);
+        }
+
+        //Build-in Async Methods: WriteAsync:
+        static async Task SaveFile(string filename, byte[] data)
+        {
+            using (FileStream stream = new FileStream(filename, FileMode.OpenOrCreate))
+            {
+                int length = data.Length;
+
+                await stream.WriteAsync(data, 0, length);
+            }
         }
     }
 
