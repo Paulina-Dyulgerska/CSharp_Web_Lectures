@@ -522,7 +522,7 @@ namespace PrimeNumbersCounter
     class DownloadingVicWithTasksAndWorkflowChecking
     {
         static int count = 0;
-        static void Main()
+        static void MainP()
         {
             Stopwatch sw = Stopwatch.StartNew();
 
@@ -548,7 +548,8 @@ namespace PrimeNumbersCounter
         {
             //count++;
             Console.WriteLine($"Start------------------------------------{i}");
-            await Task.Run(() => { //ako nqma await, tozi task nikoj nqma da go chaka da se naraboti, 
+            await Task.Run(() =>
+            { //ako nqma await, tozi task nikoj nqma da go chaka da se naraboti, 
                 //a prosto Main() shte priklyuchi rabota!
                 Console.WriteLine("In first await");
                 Console.ReadLine();
@@ -635,4 +636,79 @@ namespace PrimeNumbersCounter
         }
     }
 
+    class DataParallelismExample
+    {
+        private static int count;
+        private static object lockObj = new object();
+        static void Main()
+        {
+            //Stopwatch sw = Stopwatch.StartNew();
+            //PrintPrimeCountSynchronious(0, 10_000_000);
+            //Console.WriteLine(count);
+            //Console.WriteLine(sw.Elapsed);
+            ////664581
+            ////00:00:07.6525315
+            ////vze mi do kym 9% ot CPU-to, za da go smetne.
+            ////Ne vseki core beshe na 100% v nachaloto natovaren!!!
+
+            Stopwatch sw = Stopwatch.StartNew();
+            PrintPrimeCountAsynchronious(0, 10_000_000);
+            Console.WriteLine(count);
+            Console.WriteLine(sw.Elapsed);
+            //664581
+            //00:00:02.0296521
+            //vze mi do kym 20% ot CPU-to, za da go smetne. T.e. 3 pyti po-mako vreme, 2 pyti po-natoraveno CPU.
+            //t.e. towa e mnogo po-optimalno!!! Dori za moment vseki core beshe na 100%.
+            //t.e. utilizira mi se max CPU-to, koeto e celta mi!!!!
+
+
+        }
+        static void PrintPrimeCountAsynchronious(int min, int max)
+        {
+            Parallel.For(min, max + 1, i =>
+              {
+                  bool isPrime = true;
+
+                  for (int j = 2; j <= Math.Sqrt(i); j++)
+                  {
+                      if (i % j == 0)
+                      {
+                          isPrime = false;
+                          break;
+                      }
+                  };
+
+                  if (isPrime)
+                  {
+                      //monitor
+                      lock (lockObj)
+                      {
+                          count++;
+                      };
+                  }
+              });
+        }
+
+        static void PrintPrimeCountSynchronious(int min, int max)
+        {
+            for (int i = min; i <= max; i++)
+            {
+                bool isPrime = true;
+                //for (int j = 2; j < i; j++)
+                for (int j = 2; j <= Math.Sqrt(i); j++) //ako tyrsq do kvadraten koren bilo dostatychno vika Niki.
+                {
+                    if (i % j == 0)
+                    {
+                        isPrime = false;
+                        break;
+                    }
+                }
+
+                if (isPrime)
+                {
+                    count++;
+                }
+            }
+        }
+    }
 }

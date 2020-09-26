@@ -43,16 +43,29 @@ namespace HttpServer
                 string requestString = Encoding.UTF8.GetString(buffer, 0, lenght);
                 Console.WriteLine(requestString);
 
-                Thread.Sleep(10000); //spiram threada za 10 secunds.
+                bool sessionSet = false;
+
+                if (requestString.Contains("sid"))
+                {
+                    sessionSet = true;
+                }
+
+                //Thread.Sleep(10000); //spiram threada za 10 secunds.
 
                 string html = $"<h1>Hello from PaulinaServer {DateTime.Now}</h1>" +
                     $"<form action=/tweet method=post><input name=username /><input name=password />" +
                     $"<input type=submit /></form>" + DateTime.Now;
 
                 string response = "HTTP/1.1 200 OK" + NewLine +
-                    "Server: NikiServer 2020" + NewLine +
+                    "Server: PaulinaServer 2020" + NewLine +
                     // "Location: https://www.google.com" + NewLine +
                     "Content-Type: text/html; charset=utf-8" + NewLine +
+                    "Set-Cookie: sid2=0; Domein=localhost; Path=/; Expires=" +
+                                            DateTime.UtcNow.AddSeconds(20).ToString("R") + NewLine +
+                    (!sessionSet ? ("Set-Cookie: sid=daeqweqwe921302932131231" + NewLine) : null) +
+                    //tova znachi: ako ne mi e dalo session kato cookie v requesta, togawa mu prati towa
+                    //cookie, no ako mi e dali session, to togawa ne mu prashtaj tozi Set-Cookie header!
+                    //"Set-Cookie: sid2=2; Domein=localhost; Path=/account" + NewLine +
                     // "Content-Disposition: attachment; filename=niki.txt" + NewLine +
                     "Content-Lenght: " + html.Length + NewLine +
                     NewLine +
