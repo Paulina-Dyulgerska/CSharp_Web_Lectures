@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30503.244
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SUS.HTTP", "SUS.HTTP\SUS.HTTP.csproj", "{EDACA900-29DA-44B3-8126-FE3F107336C5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Apps", "Apps", "{72106B7E-7D07-4BB4-AC5B-0B3484A15AB3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SUS.MvcFramework", "SUS.MvcFramework\SUS.MvcFramework.csproj", "{BDCA4FD5-E6D1-4BA6-8643-E41E4D1440E3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EDACA900-29DA-44B3-8126-FE3F107336C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDACA900-29DA-44B3-8126-FE3F107336C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDACA900-29DA-44B3-8126-FE3F107336C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDACA900-29DA-44B3-8126-FE3F107336C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BDCA4FD5-E6D1-4BA6-8643-E41E4D1440E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDCA4FD5-E6D1-4BA6-8643-E41E4D1440E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDCA4FD5-E6D1-4BA6-8643-E41E4D1440E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDCA4FD5-E6D1-4BA6-8643-E41E4D1440E3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {674E0559-5A0C-420C-8F74-12431C1D362F}
+	EndGlobalSection
+EndGlobal
