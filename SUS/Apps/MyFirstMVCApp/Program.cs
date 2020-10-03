@@ -1,8 +1,6 @@
-﻿using SUS.HTTP;
-using System;
-using System.Linq;
-using System.Net;
-using System.Text;
+﻿using MyFirstMVCApp.Controllers;
+using SUS.HTTP;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace MyFirstMVCApp
@@ -12,44 +10,17 @@ namespace MyFirstMVCApp
         static async Task Main(string[] args)
         {
             IHttpServer server = new HttpServer();
+            
             //route table:
-            server.AddRoute("/", HomePage);
-            server.AddRoute("/favico.ico", Favicon);
-            server.AddRoute("/about", About);
-            server.AddRoute("/users/login", Login);
+            server.AddRoute("/", new HomeController().Index);
+            server.AddRoute("/favicon.ico", new StaticFilesController().Favicon);
+            server.AddRoute("/about", new HomeController().About);
+            server.AddRoute("/users/login", new UsersController().Login);
+            server.AddRoute("/users/register",new UsersController().Register);
+
+            Process.Start(@"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe", "http://localhost");
+            
             await server.StartAsync();
-        }
-
-        static HttpResponse HomePage(HttpRequest request) //action
-        {
-            var responseHtml = "<h1>Welcome!<h1>" + request.Headers.FirstOrDefault(x => x.Name == "User-Agent")?.Value;
-            var responseBodyBytes = Encoding.UTF8.GetBytes(responseHtml);
-            var response = new HttpResponse("text/html", responseBodyBytes);
-
-            return response; 
-        }
-
-        static HttpResponse Favicon(HttpRequest request)
-        {
-            throw new NotImplementedException();
-        }
-
-        static HttpResponse About(HttpRequest request)
-        {
-            var responseHtml = "<h1>About.......<h1>";
-            var responseBodyBytes = Encoding.UTF8.GetBytes(responseHtml);
-            var response = new HttpResponse("text/html", responseBodyBytes);
-
-            return response;
-        }
-
-        static HttpResponse Login(HttpRequest request)
-        {
-            var responseHtml = "<h1>Login.......<h1>";
-            var responseBodyBytes = Encoding.UTF8.GetBytes(responseHtml);
-            var response = new HttpResponse("text/html", responseBodyBytes);
-
-            return response;
         }
     }
 }
