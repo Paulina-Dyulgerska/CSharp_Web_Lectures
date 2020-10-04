@@ -10,19 +10,24 @@ namespace SUS.HTTP
 {
     public class HttpServer : IHttpServer
     {
-        IDictionary<string, Func<HttpRequest, HttpResponse>> routeTable = new Dictionary<string, Func<HttpRequest, HttpResponse>>();
+        ICollection<Route> routeTable = new List<Route>();
 
-        public void AddRoute(string path, Func<HttpRequest, HttpResponse> action)
+        public HttpServer(List<Route> routeTable)
         {
-            if (routeTable.ContainsKey(path))
-            {
-                routeTable[path] = action;
-            }
-            else
-            {
-                routeTable.Add(path, action);
-            }
+            this.routeTable = routeTable;
         }
+
+        //public void AddRoute(string path, Func<HttpRequest, HttpResponse> action)
+        //{
+        //    if (routeTable.ContainsKey(path))
+        //    {
+        //        routeTable[path] = action;
+        //    }
+        //    else
+        //    {
+        //        routeTable.Add(path, action);
+        //    }
+        //}
 
         public async Task StartAsync(int port = 80)
         {
@@ -75,9 +80,18 @@ namespace SUS.HTTP
                     //let's go to the route table now and connect the request with the response
                     //Response
                     HttpResponse response;
-                    if (this.routeTable.ContainsKey(request.Path))
+
+                    //if (this.routeTable.ContainsKey(request.Path))
+                    //{
+                    //    var action = this.routeTable[request.Path];
+                    //    response = action(request);
+                    //}
+
+                    var route = this.routeTable.FirstOrDefault(x => x.Path == request.Path);
+                    
+                    if (route != null)
                     {
-                        var action = this.routeTable[request.Path];
+                        var action = route.Action;
                         response = action(request);
                     }
                     else
