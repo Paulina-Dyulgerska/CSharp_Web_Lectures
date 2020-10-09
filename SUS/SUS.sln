@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SUS.MvcFramework", "SUS.Mvc
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyFirstMVCApp", "Apps\MyFirstMVCApp\MyFirstMVCApp.csproj", "{64FC9B2C-FB3C-4D86-95FA-2B6D311DCC9A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SUS.MvcFramework.Tests", "SUS.MvcFramework.Tests\SUS.MvcFramework.Tests.csproj", "{0F3B5DD7-D42A-4C97-BD91-B1345D6CF1FA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +31,10 @@ Global
 		{64FC9B2C-FB3C-4D86-95FA-2B6D311DCC9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{64FC9B2C-FB3C-4D86-95FA-2B6D311DCC9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{64FC9B2C-FB3C-4D86-95FA-2B6D311DCC9A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F3B5DD7-D42A-4C97-BD91-B1345D6CF1FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F3B5DD7-D42A-4C97-BD91-B1345D6CF1FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F3B5DD7-D42A-4C97-BD91-B1345D6CF1FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F3B5DD7-D42A-4C97-BD91-B1345D6CF1FA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

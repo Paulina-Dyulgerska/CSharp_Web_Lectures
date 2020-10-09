@@ -87,8 +87,11 @@ namespace SUS.HTTP
                     //    response = action(request);
                     //}
 
-                    var route = this.routeTable.FirstOrDefault(x => x.Path == request.Path);
-                    
+                    //var route = this.routeTable.FirstOrDefault(x => x.Path == request.Path);
+                    //to ignore the casing i use string.Compare():
+                    var route = this.routeTable.FirstOrDefault(x => string.Compare(x.Path, request.Path, ignoreCase: true) == 0
+                    && x.Method == request.Method);
+
                     if (route != null)
                     {
                         var action = route.Action;

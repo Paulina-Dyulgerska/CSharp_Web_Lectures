@@ -1,5 +1,6 @@
 ﻿using SUS.HTTP;
 using SUS.MvcFramework;
+using System;
 
 namespace MyFirstMVCApp.Controllers
 {
@@ -15,6 +16,17 @@ namespace MyFirstMVCApp.Controllers
 
             return this.View();
         }
+
+        public HttpResponse DoLogin(HttpRequest request)
+        {
+            //TODO: read data
+            //TODO: check user
+            //TODO: log user
+
+            //redirect home page
+            return this.Redirect("/");
+        }
+
         public HttpResponse Register(HttpRequest request)
         {
             return this.View();
