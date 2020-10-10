@@ -6,9 +6,12 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Collections.Generic;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace SUS.MvcFramework.ViewEngine
 {
+    //RAZOR View Engine
     public class SusViewEngine : IViewEngine
     {
         public string GetHtml(string templateCode, object viewModel)
@@ -60,7 +63,53 @@ namespace ViewNamespace
 
         private string GetMethodBody(string templateCode)
         {
-            return string.Empty;
+            Regex csharpCodeRegex = new Regex(@"[^\""\s\&\<\']+");
+
+            var supportedOperators = new List<string> { "for", "while", "if", "else", "foreach" };
+
+            StringBuilder csharpCode = new StringBuilder();
+
+            StringReader sr = new StringReader(templateCode); //raboti kato stream za chetene na file.
+
+            string line;
+            while ((line = sr.ReadLine()) != null) //kato prochete posledniq red, line e == null
+            {
+                if (supportedOperators.Any(x=>line.TrimStart().StartsWith("@" + x)))
+                {
+                    var atSignLocation = line.IndexOf("@");
+                    line = line.Remove(atSignLocation, 1);
+                    csharpCode.AppendLine(line);
+                }
+                else if (line.TrimStart().StartsWith("{") || line.TrimStart().StartsWith("}"))
+                {
+                    csharpCode.AppendLine(line);
+                }
+                else
+                {
+                    //each html row will start with:
+                    csharpCode.Append($"html.AppendLine(@\"");
+
+                    while (line.Contains("@"))
+                    {
+                        var atSignLocation = line.IndexOf("@");
+                        var htmlBeforeAtSign = line.Substring(0, atSignLocation);
+                        csharpCode.Append(htmlBeforeAtSign.Replace("\"", "\"\"") + "\" + ");
+                        var lineAfterAtSign = line.Substring(atSignLocation + 1);
+                        var code = csharpCodeRegex.Match(lineAfterAtSign).Value;
+                        csharpCode.Append(code + " + @\"");  
+                        line = lineAfterAtSign.Substring(code.Length);
+                    }
+
+                    //csharpCode.Append($"html.Append(@\"{line.Replace("\"", "\"\"")}\");");
+                    //replacevam " s "" kogato imam @ otpred, "" stavat na " - da go vnimawam towa!!!
+
+                    //each html row will end with:
+                    csharpCode.AppendLine(line.Replace("\"", "\"\"") + "\");");
+                }
+
+            }
+
+            return csharpCode.ToString();
         }
 
         private IView GenerateExecutableCode(string csharpCode, object viewModel)
@@ -104,7 +153,7 @@ namespace ViewNamespace
                 compileResult = compileResult.AddReferences(MetadataReference.CreateFromFile(Assembly.Load(library).Location));
             }
 
-            //dobavqm C# coda kym novoto mi assembly
+            //dobavqm C# coda kym novoto mi assembly, veche wsichko e tam barabar s Referenciite!!!!
             compileResult = compileResult.AddSyntaxTrees(SyntaxFactory.ParseSyntaxTree(csharpCode));
 
             //compileResult.Emit("view.dll"); //ne mi trqbwa dll, a tezi bytes ot IL cod da sa mi v pametta
@@ -115,24 +164,38 @@ namespace ViewNamespace
 
             using (MemoryStream memoryStream = new MemoryStream())
             {
-                EmitResult result = compileResult.Emit(memoryStream);
+                EmitResult result = compileResult.Emit(memoryStream); //slagam IL instructionite v tozi memorystream
 
                 if (!result.Success)
                 {
-                    //have compile errors! Poluchavam info za errors, inache sym zagubena bez towa!
+                    //catch here the compile errors! Poluchavam info za errors, inache sym zagubena bez towa!
                     return new ErrorView(result.Diagnostics
                         .Where(e => e.Severity == DiagnosticSeverity.Error)
                         .Select(e => e.GetMessage())
                         .AsEnumerable(), csharpCode);
                 }
 
-                //za da se vyrna da cheta streama ot nachaloto, trqbwa da pozicioniram glavata v nachaloto i ot tam da pochna cheteneto mu:
-                memoryStream.Seek(0, SeekOrigin.Begin);
-                var byteAssembly = memoryStream.ToArray(); //pravq memoryStreama na array
-                var assembly = Assembly.Load(byteAssembly); //pravq array-a na Assembly
-                var viewType = assembly.GetType("ViewNamespace.ViewClass"); //vzimam si typa na view-to
-                var instance = Activator.CreateInstance(viewType);
-                return instance as IView; //sigurna sym che tozi obekt implementira IView!!!
+                try
+                {
+                    //catch here the errors accured by hte following vcode execution:
+                    //za da se vyrna da cheta streama ot nachaloto, trqbwa da pozicioniram glavata v nachaloto i ot tam da pochna cheteneto mu:
+                    memoryStream.Seek(0, SeekOrigin.Begin); //shte cheta streama ot nachaloto.
+                    var byteAssembly = memoryStream.ToArray(); //pravq memoryStreama na array
+                    var assembly = Assembly.Load(byteAssembly); //pravq array-a na Assembly, t.e. syzdawam Assemblyto ot tezi IL instructions!
+                    var viewType = assembly.GetType("ViewNamespace.ViewClass"); //vzimam si ot Assemblyto tochno tozi class - ViewClass!!!
+                    var instance = Activator.CreateInstance(viewType); //syzdawam si instance ot tipa na view-to, t.e. new ViewClass() pravq!
+                    return (instance as IView) ?? new ErrorView(new string[] {"Instance is null"}, csharpCode); 
+                    //ili mi vrystha instance, a ako instance == null - mi vryshta Error!!!
+                    //sigurna sym che tozi obekt implementira IView i zatowa conventiram kym IView
+                    //nakraq vryshtam towa view!!!
+                    //tuk ne pravq cast - (IView)instance, zashtoto ako instance e null, shte mi hvyrli exception, dokato s as nqma
+                    //da mi hvyrli exception, a shte mi vyrne null. zatowa as vinagi e po-predpochitaniqt variant pred explicit castvaneto!
+                }
+                catch (Exception ex)
+                {
+                    //return errors accured by the memoryStream and assembly loading.
+                    return new ErrorView(new string[] { ex.Message }, csharpCode);
+                }
             }
         }
     }
