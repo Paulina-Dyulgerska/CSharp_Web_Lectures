@@ -16,7 +16,7 @@ namespace SUS.MvcFramework.ViewEngine
     {
         public string GetHtml(string templateCode, object viewModel)
         {
-            string csharpCode = GenerateCSharpFromTemplate(templateCode);
+            string csharpCode = GenerateCSharpFromTemplate(templateCode, viewModel);
 
             IView executableObject = GenerateExecutableCode(csharpCode, viewModel);
             //napravi si IView, samo za da opishe v interface nalichieto
@@ -28,12 +28,34 @@ namespace SUS.MvcFramework.ViewEngine
             //predi da sym syzdala realniqt method ExecuteTemplate(viewModel)!!!!
 
             string html = executableObject.ExecuteTemplate(viewModel);
+            //tozi method se vika ot in memory assemblity mi: 
+            //public string ExecuteTemplate(object viewModel)!!!!!!!!!!!!!!!!!!!!!!!!!1
+            //classa mu e ViewClass i se namira v namespace ViewNamespace!!!!! Towa assembly prisystva SAMO v pametta, no to
+            //si ima method ExecuteTemplate(viewModel) i az moga da go vikam i polzwam kato realen class, vse edno sym si go 
+            //napisala v otdelen file!!!!
 
             return html;
         }
 
-        private string GenerateCSharpFromTemplate(string templateCode)
+        private string GenerateCSharpFromTemplate(string templateCode, object viewModel)
         {
+            //dava mi imeto na modela zaedno s namespace-to mu
+            string typeOfModel = "object";
+            if (viewModel != null)
+            {
+                //ako mi hrumne, che iskam viewModela mi da e ot type ICollection<>, to da moje da mi raboti:
+                if (viewModel.GetType().IsGenericType)
+                {
+                    var modelName = viewModel.GetType().FullName;
+                    var genericArguments = viewModel.GetType().GenericTypeArguments;
+                    typeOfModel = modelName.Substring(0, modelName.IndexOf('`')) 
+                        + "<" + string.Join(", ", genericArguments.Select(x=>x.FullName)) + ">";
+                }
+                else
+                {
+                    typeOfModel = viewModel.GetType().FullName;
+                }
+            }
             string methodBody = GetMethodBody(templateCode);
             string csharpCode = @"
 using System;
@@ -48,15 +70,16 @@ namespace ViewNamespace
     {
         public string ExecuteTemplate(object viewModel)
         {
+            var Model = viewModel as " + typeOfModel + @";
+
             var html = new StringBuilder();
-            
+
             " + methodBody + @"
 
             return html.ToString();
         }
     }
-}
-";
+}";
 
             return csharpCode;
         }
@@ -74,7 +97,7 @@ namespace ViewNamespace
             string line;
             while ((line = sr.ReadLine()) != null) //kato prochete posledniq red, line e == null
             {
-                if (supportedOperators.Any(x=>line.TrimStart().StartsWith("@" + x)))
+                if (supportedOperators.Any(x => line.TrimStart().StartsWith("@" + x)))
                 {
                     var atSignLocation = line.IndexOf("@");
                     line = line.Remove(atSignLocation, 1);
@@ -96,7 +119,7 @@ namespace ViewNamespace
                         csharpCode.Append(htmlBeforeAtSign.Replace("\"", "\"\"") + "\" + ");
                         var lineAfterAtSign = line.Substring(atSignLocation + 1);
                         var code = csharpCodeRegex.Match(lineAfterAtSign).Value;
-                        csharpCode.Append(code + " + @\"");  
+                        csharpCode.Append(code + " + @\"");
                         line = lineAfterAtSign.Substring(code.Length);
                     }
 
@@ -184,7 +207,7 @@ namespace ViewNamespace
                     var assembly = Assembly.Load(byteAssembly); //pravq array-a na Assembly, t.e. syzdawam Assemblyto ot tezi IL instructions!
                     var viewType = assembly.GetType("ViewNamespace.ViewClass"); //vzimam si ot Assemblyto tochno tozi class - ViewClass!!!
                     var instance = Activator.CreateInstance(viewType); //syzdawam si instance ot tipa na view-to, t.e. new ViewClass() pravq!
-                    return (instance as IView) ?? new ErrorView(new string[] {"Instance is null"}, csharpCode); 
+                    return (instance as IView) ?? new ErrorView(new string[] { "Instance is null" }, csharpCode);
                     //ili mi vrystha instance, a ako instance == null - mi vryshta Error!!!
                     //sigurna sym che tozi obekt implementira IView i zatowa conventiram kym IView
                     //nakraq vryshtam towa view!!!
