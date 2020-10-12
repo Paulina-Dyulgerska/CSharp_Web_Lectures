@@ -4,9 +4,9 @@ using System;
 
 namespace MyFirstMVCApp.Controllers
 {
-  public  class UsersController : Controller
+    public class UsersController : Controller
     {
-        public HttpResponse Login(HttpRequest request)
+        public HttpResponse Login()
         {
             //this is done by the base class Controller:
             //var responseHtml = File.ReadAllText("Views/Users/Login.html");
@@ -17,7 +17,8 @@ namespace MyFirstMVCApp.Controllers
             return this.View();
         }
 
-        public HttpResponse DoLogin(HttpRequest request)
+        [HttpPost]
+        public HttpResponse DoLogin()
         {
             //TODO: read data
             //TODO: check user
@@ -27,10 +28,14 @@ namespace MyFirstMVCApp.Controllers
             return this.Redirect("/");
         }
 
-        public HttpResponse Register(HttpRequest request)
+        public HttpResponse Register()
         {
             return this.View();
         }
 
+        public HttpResponse Logout()
+        {
+            return this.Redirect("/");
+        }
     }
 }
