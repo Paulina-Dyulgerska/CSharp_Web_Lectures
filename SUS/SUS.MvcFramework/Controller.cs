@@ -1,6 +1,7 @@
 ﻿using SUS.HTTP;
 using SUS.MvcFramework.ViewEngine;
 using System;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 
@@ -14,6 +15,11 @@ namespace SUS.MvcFramework
         {
             this.viewEngine = new SusViewEngine();
         }
+
+        public HttpRequest Request { get; set; }
+        //HttpRequesta veche e chast ot Controllerite, a ne se podawa otvyn na vseki edin method izrishno!!!!
+
+
         //public HttpResponse View()
         //{
         //    var responseHtml = System.IO.File.ReadAllText($"Views/" +
@@ -27,19 +33,23 @@ namespace SUS.MvcFramework
 
         public HttpResponse View(object viewModel = null, [CallerMemberName] string viewPath = null)
         {
-            var layout = System.IO.File.ReadAllText("Views/Shared/_Layout.cshtml");
-            layout = layout.Replace("@RenderBody()", "___VIEW_GOES_HERE___");
+            //imam dostyp do requesta tuk:
+            Console.WriteLine($"This is the Http Request Path => {this.Request.Path}");
+
 
             var viewContent = System.IO.File.ReadAllText($"Views/" +
                 $"{this.GetType().Name.Replace("Controller", string.Empty)}/" +
                 $"{viewPath}.cshtml");
             viewContent = this.viewEngine.GetHtml(viewContent, viewModel);
 
+            var layout = System.IO.File.ReadAllText("Views/Shared/_Layout.cshtml");
+            layout = layout.Replace("@RenderBody()", "___VIEW_GOES_HERE___");
+
             var responseHtml = layout.Replace("___VIEW_GOES_HERE___", viewContent);
             var responseBodyBytes = Encoding.UTF8.GetBytes(responseHtml);
             var response = new HttpResponse("text/html", responseBodyBytes);
 
-            return response;    
+            return response;
         }
 
         public HttpResponse File(string filePath, string contentType)
