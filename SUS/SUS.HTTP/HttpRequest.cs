@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 
 namespace SUS.HTTP
@@ -11,6 +12,7 @@ namespace SUS.HTTP
         {
             this.Headers = new List<Header>();
             this.Cookies = new List<Cookie>();
+            this.FormData = new Dictionary<string, string>();
 
             var lines = requestString.Split(new string[] { HttpConstants.NewLine }, System.StringSplitOptions.None);
 
@@ -63,6 +65,28 @@ namespace SUS.HTTP
             }
 
             this.Body = bodyBuilder.ToString();
+
+            if (this.Body != "")
+            {
+                //var parameters = this.Body.Split('&');
+                var parameters = this.Body.Split(new char[] { '&' }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (var parameter in parameters)
+                {
+                    var parameterParts = parameter.Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
+                    var name = parameterParts[0];
+                    var value = 0.ToString();
+
+                    if (parameterParts.Length > 1)
+                    {
+                       value = WebUtility.UrlDecode(parameterParts[1]); //pravi mi normalen url string s ://, inache te sa zameneni s %3M i dr.podobni
+                    }
+
+                    if (!this.FormData.ContainsKey(name))
+                    {
+                        this.FormData.Add(name, value);
+                    }
+                }
+            }
         }
 
         public string Path { get; set; }
@@ -72,6 +96,8 @@ namespace SUS.HTTP
         public ICollection<Header> Headers { get; set; }
 
         public ICollection<Cookie> Cookies { get; set; }
+
+        public IDictionary<string, string> FormData { get; set; }
 
         public string Body { get; set; }
     }
