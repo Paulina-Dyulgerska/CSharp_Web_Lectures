@@ -1,4 +1,6 @@
-﻿using MyFirstMVCApp.Controllers;
+﻿using Microsoft.EntityFrameworkCore;
+using MyFirstMVCApp.Controllers;
+using MyFirstMVCApp.Data;
 using SUS.HTTP;
 using SUS.MvcFramework;
 using System.Collections.Generic;
@@ -34,6 +36,8 @@ namespace MyFirstMVCApp
             //routeTable.Add(new Route("/js/bootstrap.bundle.min.js", HttpMethod.Get, new StaticFilesController().BootstrapJs));
             //routeTable.Add(new Route("/js/custom.js", HttpMethod.Get, new StaticFilesController().CustomJs));
             //routeTable.Add(new Route("/img/cat.png", HttpMethod.Get, new StaticFilesController().CatImg));
+
+            new ApplicationDBContext().Database.Migrate();
 
         }
     }
