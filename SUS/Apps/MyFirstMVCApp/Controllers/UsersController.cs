@@ -32,10 +32,5 @@ namespace MyFirstMVCApp.Controllers
         {
             return this.View();
         }
-
-        public HttpResponse Logout()
-        {
-            return this.Redirect("/");
-        }
     }
 }

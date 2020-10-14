@@ -1,4 +1,5 @@
-﻿using SUS.HTTP;
+﻿using MyFirstMVCApp.ViewModels;
+using SUS.HTTP;
 using SUS.MvcFramework;
 
 namespace MyFirstMVCApp.Controllers
@@ -9,6 +10,19 @@ namespace MyFirstMVCApp.Controllers
         {
             return this.View();
         }
+
+        [HttpPost("/Cards/Add")]
+        public HttpResponse DoAdd()
+        {
+            var viewModel = new DoAddViewModel
+            {
+                Attack = int.Parse(this.Request.FormData["attack"]),
+                Health = int.Parse(this.Request.FormData["health"]),
+            };
+
+            return this.View(viewModel);
+        }
+
         public HttpResponse All()
         {
             return this.View();
