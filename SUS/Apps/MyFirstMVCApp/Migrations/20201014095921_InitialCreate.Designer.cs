@@ -9,7 +9,7 @@ using MyFirstMVCApp.Data;
 namespace MyFirstMVCApp.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20201014095148_InitialCreate")]
+    [Migration("20201014095921_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -31,6 +31,8 @@ namespace MyFirstMVCApp.Data
             {
                 e.HasKey(x => new { x.CardId, x.UserId });
             });
+
+            base.OnModelCreating(modelBuilder);
         }
 
         public DbSet<User> Users { get; set; }
