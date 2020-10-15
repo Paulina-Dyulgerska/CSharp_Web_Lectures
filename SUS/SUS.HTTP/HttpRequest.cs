@@ -8,6 +8,9 @@ namespace SUS.HTTP
 {
     public class HttpRequest
     {
+        public static IDictionary<string, Dictionary<string, string>> Sessions = new Dictionary<string, Dictionary<string, string>>();
+        //vseki pyt kogato vleze potrebitelq i napravi nqkakwa zaqwka, 
+
         public HttpRequest(string requestString)
         {
             this.Headers = new List<Header>();
@@ -64,6 +67,39 @@ namespace SUS.HTTP
                 }
             }
 
+            var sessionCookie = this.Cookies.FirstOrDefault(x => x.Name == HttpConstants.SessionCookieName);
+            //SUS_SID e imeto na session cookie-to mi!!! S tova Cookie, koeto shte ima Path "/", t.e. shte vaji za vseki edin sait ot 
+            //moq sait, az veche kydeto i da se razhojdam, towa cookie shte e edno i syshto i shte e neizmenno s men. Taka az imam
+            //veche edin unikalen identifikator na usera i znam, koga usera e edin i sysht i koga ne e!!!! User s edno i syshto
+            //session cookie, za servera shte e edin i sysht user!!!
+            //Veche vseki edin Cotnroller moje da se vyzpolzwa ot sessiona i da pishe i da chete ot neq. Dostypva sessiona chrez
+            //this.request.Session!!!!
+
+            if (sessionCookie == null)
+            //ako nqma session cookie ili ako usera e podal session cookie, no to (sessionId-to mu) ne se sydyrja v spisyka sys sessiite:
+            //togawa pravim nova session cookie!!!
+            {
+                var sessionId = Guid.NewGuid().ToString();
+                this.Session = new Dictionary<string, string>();
+                Sessions.Add(sessionId, this.Session);
+                //shte si pazq Id-to na sessiona.
+                //Za nova seesionId, shte se pravi nov Dictionary i tam shte se pazqt na novata session .....coookietata za sessiona li?????
+                this.Cookies.Add(new Cookie(HttpConstants.SessionCookieName, sessionId));
+            }
+            else if (!Sessions.ContainsKey(sessionCookie.Value))
+                //ako nqma session s takowa Id, to dobavi q s towa tochno Id v Sessions!!!
+                //tova e za sluchaite, v koito sym otvorila sajta, posle sym zatvorila prilojenieto i posle pak sym otvorila saita:
+            {
+                this.Session = new Dictionary<string, string>();
+                Sessions.Add(sessionCookie.Value, this.Session);
+            }
+            else
+            {
+                this.Session = Sessions[sessionCookie.Value]; //po id-to shte vzema tekushtata sessiq!!! sessionCookie ima name SUS_SID
+                //i value, koeto e sessionId-to!!!!! Taka shte znam, che usera mi e syshtiq kato ot predi malko i shte razpoznawam
+                //koj mi se razhojda po stranicata!!!!
+            }
+
             this.Body = bodyBuilder.ToString();
 
             if (this.Body != "")
@@ -78,7 +114,7 @@ namespace SUS.HTTP
 
                     if (parameterParts.Length > 1)
                     {
-                       value = WebUtility.UrlDecode(parameterParts[1]); //pravi mi normalen url string s ://, inache te sa zameneni s %3M i dr.podobni
+                        value = WebUtility.UrlDecode(parameterParts[1]); //pravi mi normalen url string s ://, inache te sa zameneni s %3M i dr.podobni
                     }
 
                     if (!this.FormData.ContainsKey(name))
@@ -98,6 +134,8 @@ namespace SUS.HTTP
         public ICollection<Cookie> Cookies { get; set; }
 
         public IDictionary<string, string> FormData { get; set; }
+
+        public Dictionary<string, string> Session { get; set; }
 
         public string Body { get; set; }
     }

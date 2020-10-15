@@ -104,7 +104,17 @@ namespace SUS.HTTP
                     }
 
                     response.Headers.Add(new Header("Server", "SUS Server 1.0"));
-                    response.Cookies.Add(new ResponseCookie("sid", Guid.NewGuid().ToString()) { HttpOnly = true, MaxAge = 60 * 24 * 60 * 60 });
+                    //response.Cookies.Add(new ResponseCookie("sid", Guid.NewGuid().ToString()) { HttpOnly = true, MaxAge = 60 * 24 * 60 * 60 });
+                    var sessionCookie = request.Cookies.FirstOrDefault(x => x.Name == HttpConstants.SessionCookieName);
+                    if (sessionCookie != null)
+                    {
+                        //pravq si response cookie, zashtoto ako e samo cookie, to shte mi se razmqta po edno novo session cookie
+                        //za vseki request, dori za js i css fajlovete, a towa ne mi e nujno!!! Trqbwa mi 1 session cookie za 1 user!!!
+                        var responseSessionCookie = new ResponseCookie(sessionCookie.Name, sessionCookie.Value);
+                        //responseSessionCookie.Path = "/"; //toj si mi defaultno takyv path-a za towa sessionCookie!!!!
+                        response.Cookies.Add(responseSessionCookie); //mestq tazi cookie ot requesta v responsa!!!
+                    }
+
                     var responseHeaderBytes = Encoding.UTF8.GetBytes(response.ToString());
 
                     await stream.WriteAsync(responseHeaderBytes, 0, responseHeaderBytes.Length);
