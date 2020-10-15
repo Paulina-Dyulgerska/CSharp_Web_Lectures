@@ -48,8 +48,8 @@ namespace SUS.MvcFramework.ViewEngine
                 {
                     var modelName = viewModel.GetType().FullName;
                     var genericArguments = viewModel.GetType().GenericTypeArguments;
-                    typeOfModel = modelName.Substring(0, modelName.IndexOf('`')) 
-                        + "<" + string.Join(", ", genericArguments.Select(x=>x.FullName)) + ">";
+                    typeOfModel = modelName.Substring(0, modelName.IndexOf('`'))
+                        + "<" + string.Join(", ", genericArguments.Select(x => x.FullName)) + ">";
                 }
                 else
                 {
@@ -154,6 +154,22 @@ namespace ViewNamespace
 
             if (viewModel != null)
             {
+                ////Moeto reshenie beshe towa:
+                //if (viewModel.GetType().IsGenericType)
+                //{
+                //    var genericArgumentsTypes = viewModel.GetType().GetGenericArguments();
+                //    var typeOfModel = genericArgumentsTypes[0];
+                //    compileResult = compileResult.AddReferences(MetadataReference.CreateFromFile(typeOfModel.Assembly.Location));
+                //}
+
+                //towa e na Niki reshenieto:
+                var genericArguments = viewModel.GetType().GenericTypeArguments;
+                foreach (var genericArgument in genericArguments)
+                {
+                    compileResult = compileResult
+                        .AddReferences(MetadataReference.CreateFromFile(genericArgument.Assembly.Location));
+                }
+
                 compileResult = compileResult.AddReferences(MetadataReference.CreateFromFile(viewModel.GetType().Assembly.Location));
                 //vzimam asseblyto, v koeto se namira typa na viewModel, zashtoto az ne go znam predvaritelno kakyv type e viewModel,
                 //moje da e vsqkakyv type, no s reflecion moga da vzema typa mu i ot tam da vzema locationa na assemblyto na tozi type
