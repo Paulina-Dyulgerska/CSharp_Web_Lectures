@@ -42,14 +42,22 @@ namespace SUS.MvcFramework
                 $"{viewPath}.cshtml");
             viewContent = this.viewEngine.GetHtml(viewContent, viewModel);
 
-            var layout = System.IO.File.ReadAllText("Views/Shared/_Layout.cshtml");
-            layout = layout.Replace("@RenderBody()", "___VIEW_GOES_HERE___");
+            var responseHtml = PutViewInLayout(viewContent, viewContent);
 
-            var responseHtml = layout.Replace("___VIEW_GOES_HERE___", viewContent);
             var responseBodyBytes = Encoding.UTF8.GetBytes(responseHtml);
             var response = new HttpResponse("text/html", responseBodyBytes);
 
             return response;
+        }
+
+        private string PutViewInLayout(string viewContent, object viewModel = null)
+        {
+            var layout = System.IO.File.ReadAllText("Views/Shared/_Layout.cshtml");
+            layout = layout.Replace("@RenderBody()", "___VIEW_GOES_HERE___");
+            layout = this.viewEngine.GetHtml(layout, viewModel);
+            var responseHtml = layout.Replace("___VIEW_GOES_HERE___", viewContent);
+
+            return responseHtml;
         }
 
         public HttpResponse File(string filePath, string contentType)
@@ -68,6 +76,16 @@ namespace SUS.MvcFramework
         {
             var response = new HttpResponse(HttpStatusCode.Found);
             response.Headers.Add(new Header("Location", url));
+            return response;
+        }
+
+        public HttpResponse Error(string errorText)
+        {
+            var viewContent = $"<div class=\"alert alert-danger text-center\" role=\"alert\">{errorText}</div>";
+            var layout = this.PutViewInLayout(viewContent);
+            var responseBodyBytes = Encoding.UTF8.GetBytes(layout);
+            var response = new HttpResponse("text/html", responseBodyBytes, HttpStatusCode.ServerError);
+
             return response;
         }
     }

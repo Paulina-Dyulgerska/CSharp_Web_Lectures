@@ -29,7 +29,7 @@ namespace SUS.MvcFramework
             //    server.AddRoute(route.Path, route.Action);
             //}
 
-            //Process.Start(@"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe", $"http://localhost:{port}");
+            Process.Start(@"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe", $"http://localhost:{port}");
 
             await server.StartAsync(port);
         }
