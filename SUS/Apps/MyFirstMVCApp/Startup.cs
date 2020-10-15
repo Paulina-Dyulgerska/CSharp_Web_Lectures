@@ -37,7 +37,7 @@ namespace MyFirstMVCApp
             //routeTable.Add(new Route("/js/custom.js", HttpMethod.Get, new StaticFilesController().CustomJs));
             //routeTable.Add(new Route("/img/cat.png", HttpMethod.Get, new StaticFilesController().CatImg));
 
-            new ApplicationDBContext().Database.Migrate();
+            //new ApplicationDBContext().Database.Migrate();
 
         }
     }

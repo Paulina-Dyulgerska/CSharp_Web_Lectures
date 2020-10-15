@@ -16,9 +16,12 @@ namespace MyFirstMVCApp.Controllers
         [HttpPost("/Cards/Add")]
         public HttpResponse DoAdd()
         {
-
-
             var dbContext = new ApplicationDBContext();
+
+            if (this.Request.FormData["name"].Length < 5)
+            {
+                return this.Error("Name should be at least 5 characters long.");
+            }
 
             var card = new Card
             {
@@ -59,10 +62,13 @@ namespace MyFirstMVCApp.Controllers
                 Description = c.Description,
             }).ToList();
 
-            return this.View(cardViewModels); //tova ne minavashe prez Roslyn!!! Ne mojeshe da napravi pravilno typa, kojto iskam!!!
-            //zatowa napravihme novo view koeto sydyrja List<CardViewModel> i chrez nego podadohme vsichki cards na view-to!!!
+            return this.View(cardViewModels); //tova ne minavashe prez Roslyn!!! Ne mojeshe da napravi pravilno typa, kojto iskam,
+            //zashtoto List<CardViewModel> ne mojeshe da dobavi referenciq vyv ViewClass classa 
+            //kym assemblyto na CardViewModel i mi gyrmeshe!!!
+            //zatowa napravihme novo view koeto sydyrja edin List<CardViewModel> i chrez nego podadohme vsichki cards na view-to!!!
             //return this.View(new AllCardsViewModel { Cards = cardViewModels });
-            //no posle go opravih kato napravi da vzima pravilniqt type pri generic types!!!!
+            //no posle go opravih kato napravi da vzima pravilniqt type pri generic types i da slaga referenciq kym assemblyto na
+            //tozi generic type!!!!
         }
         public HttpResponse Collection()
         {

@@ -23,6 +23,13 @@ namespace MyFirstMVCApp.Controllers
             var viewModel = new IndexViewModel();
             viewModel.CurrentYear = DateTime.UtcNow.Year;
             viewModel.Message = "Welcome to Battle Cards";
+            //ako sym bila na About page, to shte se syzdade Session s ime "about" i stojnost "yes" i veche kato izbera Home, shte mi 
+            //se zarejda towa dopylnitelno syshtenie, che sym bila na about page i shte moga da prenasqm dori danni za usera po tozi
+            //nachin!!!
+            if (this.Request.Session.ContainsKey("about"))
+            {
+                viewModel.Message += " YOU WERE ON THE ABOVE PAGE!";
+            }
             return this.View(viewModel);
         }
 
@@ -32,6 +39,7 @@ namespace MyFirstMVCApp.Controllers
         //i na praktika zabawq computrite!! Chrez tozi attribute si pravq optimizaciq na performenca!!!
         public HttpResponse About()
         {
+            this.Request.Session["about"] = "yes";
             return this.View();
         }
 
