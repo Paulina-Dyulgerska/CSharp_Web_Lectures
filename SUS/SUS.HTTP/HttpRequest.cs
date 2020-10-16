@@ -9,7 +9,14 @@ namespace SUS.HTTP
     public class HttpRequest
     {
         public static IDictionary<string, Dictionary<string, string>> Sessions = new Dictionary<string, Dictionary<string, string>>();
-        //vseki pyt kogato vleze potrebitelq i napravi nqkakwa zaqwka, 
+        //vseki pyt kogato vleze potrebitelq i napravi nqkakwa zaqwka, az zapisvam dannite v tazi malka sessionDB, koqto e Sessions!!!
+        //tuk pazq wsichki useri, koito sa se lognali dokato raboti programata mi na servera. AKo restartiram programa mi, tazi 
+        //session DB umira i nikoj nqma da se schita za lognat i vsichki zaqwki shte se otchitat kato ot nov user za 1 pyt.
+        //No dokato raboti programata mi, sessionite sa tuk zapisani i vseki request gi pazi!!!
+        //zasega imam slednoto v Sessions:
+        //"sessionIDSomeGuid" : 
+        //                      "UserId" : userId
+        //t.e. pazi si zad edno sessionId koj tochno user stoi!!!!
 
         public HttpRequest(string requestString)
         {
@@ -83,7 +90,7 @@ namespace SUS.HTTP
                 this.Session = new Dictionary<string, string>();
                 Sessions.Add(sessionId, this.Session);
                 //shte si pazq Id-to na sessiona.
-                //Za nova seesionId, shte se pravi nov Dictionary i tam shte se pazqt na novata session .....coookietata za sessiona li?????
+                //Za nova seesionId, shte se pravi nov Dictionary i tam shte se pazqt na novata session dannite za usera, kojto q e otvoril!!!
                 this.Cookies.Add(new Cookie(HttpConstants.SessionCookieName, sessionId));
             }
             else if (!Sessions.ContainsKey(sessionCookie.Value))
@@ -98,6 +105,7 @@ namespace SUS.HTTP
                 this.Session = Sessions[sessionCookie.Value]; //po id-to shte vzema tekushtata sessiq!!! sessionCookie ima name SUS_SID
                 //i value, koeto e sessionId-to!!!!! Taka shte znam, che usera mi e syshtiq kato ot predi malko i shte razpoznawam
                 //koj mi se razhojda po stranicata!!!!
+                //this.session sa dannite za usera stoqsht sreshtu syotvetnoto sessionId!!!!
             }
 
             this.Body = bodyBuilder.ToString();
