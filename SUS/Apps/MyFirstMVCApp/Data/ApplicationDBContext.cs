@@ -7,9 +7,9 @@ namespace MyFirstMVCApp.Data
 {
     public class ApplicationDBContext : DbContext
     {
-        public ApplicationDBContext()
-        {
-        }
+        //public ApplicationDBContext()
+        //{
+        //}
 
         public ApplicationDBContext(DbContextOptions dbContextOptions)
             : base(dbContextOptions)
