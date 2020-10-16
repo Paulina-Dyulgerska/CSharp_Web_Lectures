@@ -2,9 +2,9 @@
 
 namespace SUS.MvcFramework
 {
-    public class UserIdentity
+    public class IdentityUser<T> //pozwolqwam otvyn da mi kazwat kakyv shte e typa na Id-to na Usera.
     {
-        public string Id { get; set; }
+        public T Id { get; set; }
 
         [Required]
         [MaxLength(20)]
@@ -17,5 +17,8 @@ namespace SUS.MvcFramework
         [Required]
         public string Password { get; set; } //TODO MinLenght 6,   [MaxLength(20)] - ne moga da go zadam taka tuk, zashtoto hashiranata 
         //password ot 20 symbols, shte vyrne resultat > ot 20 symbols!
+
+        public IdentityRole Role { get; set; }
+
     }
 }

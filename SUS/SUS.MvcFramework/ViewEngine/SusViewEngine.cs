@@ -68,14 +68,12 @@ namespace ViewNamespace
 {
     public class ViewClass : IView
     {
-        public string ExecuteTemplate(object viewModel)
+        public string ExecuteTemplate(object viewModel, string user)
         {
+            var User = user;
             var Model = viewModel as " + typeOfModel + @";
-
             var html = new StringBuilder();
-
             " + methodBody + @"
-
             return html.ToString();
         }
     }
