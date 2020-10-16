@@ -26,9 +26,10 @@ namespace MyFirstMVCApp.Controllers
             //ako sym bila na About page, to shte se syzdade Session s ime "about" i stojnost "yes" i veche kato izbera Home, shte mi 
             //se zarejda towa dopylnitelno syshtenie, che sym bila na about page i shte moga da prenasqm dori danni za usera po tozi
             //nachin!!!
-            if (this.Request.Session.ContainsKey("about"))
+            //if (this.Request.Session.ContainsKey("about"))
+            if (this.IsUserSignedIn())
             {
-                viewModel.Message += " YOU WERE ON THE ABOVE PAGE!";
+                viewModel.Message += " WELCOME USER! YOU WERE ON THE ABOVE PAGE!";
             }
             return this.View(viewModel);
         }
@@ -39,7 +40,8 @@ namespace MyFirstMVCApp.Controllers
         //i na praktika zabawq computrite!! Chrez tozi attribute si pravq optimizaciq na performenca!!!
         public HttpResponse About()
         {
-            this.Request.Session["about"] = "yes";
+            //this.Request.Session["about"] = "yes";
+            this.SignIn("polq");
             return this.View();
         }
 
