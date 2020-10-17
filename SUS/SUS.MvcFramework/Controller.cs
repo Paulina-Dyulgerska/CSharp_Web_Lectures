@@ -41,7 +41,7 @@ namespace SUS.MvcFramework
             var viewContent = System.IO.File.ReadAllText($"Views/" +
                 $"{this.GetType().Name.Replace("Controller", string.Empty)}/" +
                 $"{viewPath}.cshtml");
-            viewContent = this.viewEngine.GetHtml(viewContent, viewModel);
+            viewContent = this.viewEngine.GetHtml(viewContent, viewModel, this.GetUserId());
 
             var responseHtml = PutViewInLayout(viewContent, viewContent);
 
@@ -94,10 +94,17 @@ namespace SUS.MvcFramework
             //ako go ima, shte se overwrite-ne,a ako go nqma - shte se napravi takawa Key-Value dvojka.
          }
 
-        protected bool IsUserSignedIn() => this.Request.Session.ContainsKey(UserIdSessionName);
+        protected bool IsUserSignedIn() => this.Request.Session.ContainsKey(UserIdSessionName)
+            && this.Request.Session[UserIdSessionName] != null;
         //Dictionaryto gyrmi, ako iskam da vzema stojnost ot nesyshtestvuvasht KEY!!!!
-        //ako poskam direktno towa da se proveri: this.Request.Session[UserIdSessionName !=null, mi gyrmi zashtoto 
+        //ako poskam direktno towa da se proveri: this.Request.Session[UserIdSessionName] !=null, mi gyrmi zashtoto 
         //NQMA TAKYV KEY pri pyrvonachalnoto zarejdane na Home page!!!!! Zatowa da proverqwam dali ima, a ne da iskam da mu vzema stojnostta!!!!!
+        //mnogo vajna tuk e i proverkata dali, ako ima takyv KEY toj e null, zashoto ako usera se logne, posle se razlogne, toj 
+        //ima takova Session cookie, no to e null, zashoto az go nuliram pri logout! No ako proverqwam samo dali ima takowa cookie,
+        //to shte izleze, che ima dori i ako vlaue-to zad nego e null!!! Zatowa proverqwam i dvete usloviq kato e mnogo vajno da
+        //proverqwam pyrvo za syshtestvuwaneto na UserIdSessionName i edva sled towa za towa dali e null, zashtoto ako ne syshtestvuva
+        //to shte mi prekysne tam proverkata i nqma da mi gyrmi dictionaryto, kakto ako sloja proverkata na obratno:
+        //this.Request.Session[UserIdSessionName] != null && this.Request.Session.ContainsKey(UserIdSessionName)!!!!
 
         protected string GetUserId() => this.Request.Session.ContainsKey(UserIdSessionName) ?
             this.Request.Session[UserIdSessionName] : null; //za da ne gyrmi Dictionaryto, trqbwa PYRVO da proverq ima li takyv zapis s takyv KEY
@@ -107,7 +114,7 @@ namespace SUS.MvcFramework
         {
             var layout = System.IO.File.ReadAllText("Views/Shared/_Layout.cshtml");
             layout = layout.Replace("@RenderBody()", "___VIEW_GOES_HERE___");
-            layout = this.viewEngine.GetHtml(layout, viewModel);
+            layout = this.viewEngine.GetHtml(layout, viewModel, this.GetUserId());
             var responseHtml = layout.Replace("___VIEW_GOES_HERE___", viewContent);
 
             return responseHtml;

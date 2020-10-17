@@ -94,8 +94,8 @@ namespace SUS.HTTP
                 this.Cookies.Add(new Cookie(HttpConstants.SessionCookieName, sessionId));
             }
             else if (!Sessions.ContainsKey(sessionCookie.Value))
-                //ako nqma session s takowa Id, to dobavi q s towa tochno Id v Sessions!!!
-                //tova e za sluchaite, v koito sym otvorila sajta, posle sym zatvorila prilojenieto i posle pak sym otvorila saita:
+            //ako nqma session s takowa Id, to dobavi q s towa tochno Id v Sessions!!!
+            //tova e za sluchaite, v koito sym otvorila sajta, posle sym zatvorila prilojenieto i posle pak sym otvorila saita:
             {
                 this.Session = new Dictionary<string, string>();
                 Sessions.Add(sessionCookie.Value, this.Session);
@@ -116,7 +116,7 @@ namespace SUS.HTTP
                 var parameters = this.Body.Split(new char[] { '&' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (var parameter in parameters)
                 {
-                    var parameterParts = parameter.Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
+                    var parameterParts = parameter.Split(new char[] { '=' }, 2, StringSplitOptions.RemoveEmptyEntries);
                     var name = parameterParts[0];
                     var value = 0.ToString();
 

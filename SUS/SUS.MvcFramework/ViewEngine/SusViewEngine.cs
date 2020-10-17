@@ -14,7 +14,7 @@ namespace SUS.MvcFramework.ViewEngine
     //RAZOR View Engine
     public class SusViewEngine : IViewEngine
     {
-        public string GetHtml(string templateCode, object viewModel)
+        public string GetHtml(string templateCode, object viewModel, string user)
         {
             string csharpCode = GenerateCSharpFromTemplate(templateCode, viewModel);
 
@@ -27,7 +27,7 @@ namespace SUS.MvcFramework.ViewEngine
             //chrez tozi interface az moga da rabotq po coda i da polzwam executableObject s methoda mu ExecuteTemplate(viewModel) oshte 
             //predi da sym syzdala realniqt method ExecuteTemplate(viewModel)!!!!
 
-            string html = executableObject.ExecuteTemplate(viewModel);
+            string html = executableObject.ExecuteTemplate(viewModel, user);
             //tozi method se vika ot in memory assemblity mi: 
             //public string ExecuteTemplate(object viewModel)!!!!!!!!!!!!!!!!!!!!!!!!!1
             //classa mu e ViewClass i se namira v namespace ViewNamespace!!!!! Towa assembly prisystva SAMO v pametta, no to
