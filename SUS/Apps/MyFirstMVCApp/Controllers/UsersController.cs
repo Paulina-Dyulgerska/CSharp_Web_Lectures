@@ -9,11 +9,11 @@ namespace MyFirstMVCApp.Controllers
 {
     public class UsersController : Controller
     {
-        private UserService userService;
+        private readonly IUserService usersService;
 
-        public UsersController()
+        public UsersController(IUserService usersService)
         {
-            this.userService = new UserService();
+            this.usersService = usersService;
         }
 
         //GET /Users/Login ////ne e nujno da utochnqwam pytq! zashtoto toj se vzima avtomatichno
@@ -54,7 +54,7 @@ namespace MyFirstMVCApp.Controllers
 
             var username = this.Request.FormData["username"];
             var password = this.Request.FormData["password"];
-            var userId = this.userService.GetUserId(username, password);
+            var userId = this.usersService.GetUserId(username, password);
 
             if (userId == null)
             {
@@ -118,17 +118,17 @@ namespace MyFirstMVCApp.Controllers
                 return this.Error("Passwords should be the same.");
             }
 
-            if (!this.userService.IsUsernameAvailable(username))
+            if (!this.usersService.IsUsernameAvailable(username))
             {
                 return this.Error("Username already taken.");
             }
 
-            if (!this.userService.IsEmailAvailable(email))
+            if (!this.usersService.IsEmailAvailable(email))
             {
                 this.Error("This email is already registered.");
             }
 
-            var userId = this.userService.CreateUser(username, password, email);
+            var userId = this.usersService.CreateUser(username, password, email);
             this.SignIn(userId);
 
             return this.Redirect("/");

@@ -8,6 +8,13 @@ namespace MyFirstMVCApp.Controllers
 {
     public class CardsController : Controller
     {
+        private readonly ApplicationDBContext db;
+
+        public CardsController(ApplicationDBContext db)
+        {
+            this.db = db;
+        }
+
         //GET /Cards/Add
         public HttpResponse Add()
         {
@@ -28,7 +35,7 @@ namespace MyFirstMVCApp.Controllers
                 return this.Redirect("/Users/Login");
             }
 
-            var dbContext = new ApplicationDBContext();
+            //var dbContext = new ApplicationDBContext(); //tova se iznacq kato vynshno dependency.
 
             if (this.Request.FormData["name"].Length < 5)
             {
@@ -45,9 +52,9 @@ namespace MyFirstMVCApp.Controllers
                 Description = this.Request.FormData["description"],
             };
 
-            dbContext.Cards.Add(card);
+            this.db.Cards.Add(card);
 
-            dbContext.SaveChanges();
+            this.db.SaveChanges();
 
             return this.Redirect("/Cards/All");
 
@@ -67,9 +74,7 @@ namespace MyFirstMVCApp.Controllers
                 return this.Redirect("/Users/Login");
             }
 
-            var db = new ApplicationDBContext();
-
-            var cardViewModels = db.Cards.Select(c => new CardViewModel()
+            var cardViewModels = this.db.Cards.Select(c => new CardViewModel()
             {
                 Id = c.Id,
                 Name = c.Name,

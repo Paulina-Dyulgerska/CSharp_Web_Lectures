@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyFirstMVCApp.Controllers;
 using MyFirstMVCApp.Data;
+using MyFirstMVCApp.Services;
 using SUS.HTTP;
 using SUS.MvcFramework;
 using System.Collections.Generic;
@@ -9,8 +10,15 @@ namespace MyFirstMVCApp
 {
     public class Startup : IMvcApplication
     {
-        public void ConfigureServices()
+        public void ConfigureServices(IServiceCollection serviceCollection)
         {
+            //V ASP.NET Core ima 3 vida Add:
+            //AddSingelton //pravi se 1 instanciq za cqloto prilojenie
+            //AddTransient //vseki pyt, kogato poiskam instanciq, mi se dawa nowa.
+            //AddScoped //pravi se 1 instanciq za wseki scope, v kojto imam nujda ot daden obekt. t.e. za 1 zaqwka se prawi 1 instanciq
+            //nashiqt shte raboti kato AddTransient:
+
+            serviceCollection.Add<IUserService, UserService>
         }
 
         public void Configure(List<Route> routeTable)
