@@ -43,6 +43,7 @@ namespace MyFirstMVCApp.Controllers
             {
                 return this.Redirect("/Cards/All");
             }
+
             return this.View();
         }
 
@@ -50,6 +51,7 @@ namespace MyFirstMVCApp.Controllers
         //i v IL coda da se zamestvat izrazite i methodite na tochnoto mqsto, na koeto se vikat v koda, a ne da stava prehvyrlqne po
         //coda i v IL coda, taka kakto e v moq C# cod!!! T.e. obratnoto na chetimostta kym koqto se stremq. Ama tq chetimostta e za horata 
         //i na praktika zabawq computrite!! Chrez tozi attribute si pravq optimizaciq na performenca!!!
+        //GET /Home/About
         public HttpResponse About()
         {
             //this.Request.Session["about"] = "yes";

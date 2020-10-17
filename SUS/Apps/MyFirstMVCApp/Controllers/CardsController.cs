@@ -8,14 +8,26 @@ namespace MyFirstMVCApp.Controllers
 {
     public class CardsController : Controller
     {
+        //GET /Cards/Add
         public HttpResponse Add()
         {
+            if (!this.IsUserSignedIn())
+            {
+                return this.Redirect("/Users/Login");
+            }
+
             return this.View();
         }
 
         [HttpPost("/Cards/Add")]
         public HttpResponse DoAdd()
         {
+            //Niki kaza da pravq tezi validacii dori i tuk v POST methodite, a ne samo v GET!!!!
+            if (!this.IsUserSignedIn())
+            {
+                return this.Redirect("/Users/Login");
+            }
+
             var dbContext = new ApplicationDBContext();
 
             if (this.Request.FormData["name"].Length < 5)
@@ -37,18 +49,24 @@ namespace MyFirstMVCApp.Controllers
 
             dbContext.SaveChanges();
 
-            var viewModel = new DoAddViewModel
-            {
-                Attack = card.Attack,
-                Health = card.Health,
-            };
-            return this.View(viewModel);
+            return this.Redirect("/Cards/All");
 
-            //return this.Redirect("/");
+            //var viewModel = new DoAddViewModel
+            //{
+            //    Attack = card.Attack,
+            //    Health = card.Health,
+            //};
+            //return this.View(viewModel);
         }
 
+        //GET /Gards/All
         public HttpResponse All()
         {
+            if (!this.IsUserSignedIn())
+            {
+                return this.Redirect("/Users/Login");
+            }
+
             var db = new ApplicationDBContext();
 
             var cardViewModels = db.Cards.Select(c => new CardViewModel()
@@ -70,8 +88,15 @@ namespace MyFirstMVCApp.Controllers
             //no posle go opravih kato napravi da vzima pravilniqt type pri generic types i da slaga referenciq kym assemblyto na
             //tozi generic type!!!!
         }
+
+        //GET /Cards/Collection
         public HttpResponse Collection()
         {
+            if (!this.IsUserSignedIn())
+            {
+                return this.Redirect("/Users/Login");
+            }
+
             return this.View();
         }
     }

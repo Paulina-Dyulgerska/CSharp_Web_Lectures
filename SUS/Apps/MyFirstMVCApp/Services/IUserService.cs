@@ -2,9 +2,9 @@
 {
     public interface IUserService
     {
-        void CreateUser(string username, string password, string email);
+        string CreateUser(string username, string password, string email);
 
-        bool IsUserValid(string username, string password);
+        string GetUserId(string username, string password);
 
         bool IsUsernameAvailable(string username);
 

@@ -18,7 +18,7 @@ namespace MyFirstMVCApp.Services
             this.db = new ApplicationDBContext();
         }
 
-        public void CreateUser(string username, string password, string email)
+        public string CreateUser(string username, string password, string email)
         {
             var user = new User
             {
@@ -31,6 +31,8 @@ namespace MyFirstMVCApp.Services
             this.db.Users.Add(user);
 
             this.db.SaveChanges();
+
+            return user.Id;
         }
 
         public bool IsEmailAvailable(string email)
@@ -43,11 +45,11 @@ namespace MyFirstMVCApp.Services
             return !this.db.Users.Any(x => x.Email == username.ToLower());
         }
 
-        public bool IsUserValid(string username, string password)
+        public string GetUserId(string username, string password)
         {
-            var user = this.db.Users.FirstOrDefault(x => x.Username == username);
+            var user = this.db.Users.FirstOrDefault(x => x.Username == username && this.ComputeHash(password) == x.Password);
 
-            return user.Password == this.ComputeHash(password);
+            return user?.Id;
         }
 
         //tozi method moje da static, zashtoto toj ne polzwa danni na classa!!!!!!

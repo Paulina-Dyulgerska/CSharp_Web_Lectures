@@ -108,7 +108,10 @@ namespace SUS.HTTP
                 //this.session sa dannite za usera stoqsht sreshtu syotvetnoto sessionId!!!!
             }
 
-            this.Body = bodyBuilder.ToString();
+            this.Body = bodyBuilder.ToString().TrimEnd('\r', '\n'); //trimvam posledniqt nov red, kojto mi se slaga na body-to,
+            //zashtoto tozi nov red mi pravi \r\n nakravq na form dannite i taka passworda mi naprimer, ili
+            //kakvoto pole se prashta posledno, se izprashta s edin \r\n nakraq zalepeni, a ako e pass, ne mi minawa validacii,
+            //to i da ne e pass, pak e kofti rabota da si prashta po edin nov red az sama i to bez nujda!
 
             if (this.Body != "")
             {
