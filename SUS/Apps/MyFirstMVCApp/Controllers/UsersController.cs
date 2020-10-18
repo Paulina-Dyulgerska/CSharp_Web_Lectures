@@ -1,7 +1,6 @@
 ﻿using MyFirstMVCApp.Services;
 using SUS.HTTP;
 using SUS.MvcFramework;
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 
@@ -9,9 +8,9 @@ namespace MyFirstMVCApp.Controllers
 {
     public class UsersController : Controller
     {
-        private readonly IUserService usersService;
+        private readonly IUsersService usersService;
 
-        public UsersController(IUserService usersService)
+        public UsersController(IUsersService usersService)
         {
             this.usersService = usersService;
         }

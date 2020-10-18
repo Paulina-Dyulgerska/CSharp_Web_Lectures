@@ -18,7 +18,11 @@ namespace MyFirstMVCApp
             //AddScoped //pravi se 1 instanciq za wseki scope, v kojto imam nujda ot daden obekt. t.e. za 1 zaqwka se prawi 1 instanciq
             //nashiqt shte raboti kato AddTransient:
 
-            serviceCollection.Add<IUserService, UserService>
+            serviceCollection.Add<IUsersService, UsersService>();
+            serviceCollection.Add<ICardsService, CardsService>();
+            //v ASP.NET Core shte trqbwa da registriram dori neshta, koito ne sa Interface kym class:
+            //serviceCollection.Add<ApplicationDBContext, ApplicationDBContext>(); //towa moga da ne go pisha v moq class,
+            //ama v ASP.NET shte trqbwa da go pisha.
         }
 
         public void Configure(List<Route> routeTable)

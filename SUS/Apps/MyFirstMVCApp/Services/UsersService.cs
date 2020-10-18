@@ -6,12 +6,12 @@ using System.Text;
 
 namespace MyFirstMVCApp.Services
 {
-    public class UserService : IUserService
+    public class UsersService : IUsersService
     {
         private readonly ApplicationDBContext db; //moje da readonly zashtoto ne se promenq nikyde, osven v constructora.
 
         //v constructora na vseki edin service deklariram kakvi shte sa negovite nujdi.
-        public UserService(ApplicationDBContext db)
+        public UsersService(ApplicationDBContext db)
         {
             //this.db = new ApplicationDBContext(); //userServica nqma pravo da pravi new object, toj trqbwa da poluchawa vsichko
             //otvyn, da ima dependencies, a ne da izbira kakvo da si syzdade sam vytre v classa!!!!

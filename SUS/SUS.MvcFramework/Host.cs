@@ -13,12 +13,13 @@ namespace SUS.MvcFramework
         public static async Task CreateHostAsync(IMvcApplication application, int port)
         {
             List<Route> routeTable = new List<Route>();
+            IServiceCollection serviceCollection = new ServiceCollection();
+
+            application.ConfigureServices(serviceCollection);
+            application.Configure(routeTable);
 
             AutoRegisterStaticFile(routeTable);
-            AutoRegisterRoutes(routeTable, application);
-
-            application.ConfigureServices();
-            application.Configure(routeTable);
+            AutoRegisterRoutes(routeTable, application, serviceCollection);
 
             PrintRouteTable(routeTable);
 
@@ -34,7 +35,7 @@ namespace SUS.MvcFramework
             await server.StartAsync(port);
         }
 
-        private static void AutoRegisterRoutes(List<Route> routeTable, IMvcApplication application)
+        private static void AutoRegisterRoutes(List<Route> routeTable, IMvcApplication application, IServiceCollection serviceCollection)
         {
             //routeTable.Add(new Route("/users/register", HttpMethod.Get, new UsersController().Register));
             var controllerTypes = application
@@ -75,7 +76,9 @@ namespace SUS.MvcFramework
 
                     routeTable.Add(new Route(url, httpMethod, (request) =>
                     {
-                        var instance = Activator.CreateInstance(controllerType) as Controller;
+                        //var instance = Activator.CreateInstance(controllerType) as Controller;
+                        //vmesto s Activator, shte si pravq veche controllerite sys serviceCollection:
+                        var instance =serviceCollection.CreateInstance(controllerType) as Controller;
                         instance.Request = request;
                         //HttpRequesta e v request i toj veche e chast ot Controllerite, a ne se podawa otvyn na vseki edin method izrishno!!!!
                         var response = method.Invoke(instance, new object[] { }) as HttpResponse; //pri nas vseki method vryshta HttpResponse

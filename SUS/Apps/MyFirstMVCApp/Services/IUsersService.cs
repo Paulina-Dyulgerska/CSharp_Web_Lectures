@@ -1,6 +1,6 @@
 ﻿namespace MyFirstMVCApp.Services
 {
-    public interface IUserService
+    public interface IUsersService
     {
         string CreateUser(string username, string password, string email);
 
