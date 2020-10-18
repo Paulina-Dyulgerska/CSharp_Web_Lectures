@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace SUS.MvcFramework
@@ -43,7 +44,7 @@ namespace SUS.MvcFramework
 
             foreach (var controllerType in controllerTypes)
             {
-                System.Console.WriteLine(controllerType.Name);
+                Console.WriteLine(controllerType.Name);
 
                 //iskam samo methodite, koito naricham actions v edno MVC, t.e. krajni destinacii za potrebitelski zaqwki!!
                 var methods = controllerType.GetMethods()
@@ -75,20 +76,54 @@ namespace SUS.MvcFramework
                     }
 
                     routeTable.Add(new Route(url, httpMethod, (request) =>
-                    {
-                        //var instance = Activator.CreateInstance(controllerType) as Controller;
-                        //vmesto s Activator, shte si pravq veche controllerite sys serviceCollection:
-                        var instance =serviceCollection.CreateInstance(controllerType) as Controller;
-                        instance.Request = request;
-                        //HttpRequesta e v request i toj veche e chast ot Controllerite, a ne se podawa otvyn na vseki edin method izrishno!!!!
-                        var response = method.Invoke(instance, new object[] { }) as HttpResponse; //pri nas vseki method vryshta HttpResponse
-                        //v ASP>NET Core vseki method vryshta IActionResult, tova ni e malkata razlika s ASP.NET Core.
-                        return response;
-                    }));
+                                     ExecuteAction(serviceCollection, controllerType, method, request)));
 
-                    System.Console.WriteLine($" - {method.Name}");
+                    Console.WriteLine($" - {method.Name}");
                 }
             }
+        }
+
+        private static HttpResponse ExecuteAction
+            (IServiceCollection serviceCollection, Type controllerType, MethodInfo action, HttpRequest request)
+        {
+            //var instance = Activator.CreateInstance(controllerType) as Controller;
+            //vmesto s Activator, shte si pravq veche controllerite sys serviceCollection:
+            var instance = serviceCollection.CreateInstance(controllerType) as Controller;
+            instance.Request = request;
+            //tuk shte vzema argumentite, koito da podam na actiona!!!!
+            var arguments = new List<object>();
+            var parameters = action.GetParameters();
+            foreach (var parameter in parameters)
+            {
+                var parameterValue = GetParameterFromRequest(request, parameter.Name);
+                arguments.Add(parameterValue);
+            }
+
+            //HttpRequesta e v request i toj veche e chast ot Controllerite, a ne se podawa otvyn na vseki edin method izrishno!!!!
+            var response = action.Invoke(instance, arguments.ToArray()) as HttpResponse;
+            //pri nas vseki method vryshta HttpResponse.
+            //tuk moga da podam array s argumenti, koito da se podadat na actiona!!!!
+            //tezi arguments sym gi vzela ot Request.FormData!!!! Ako vyv requesta imam podadeni danni, to tezi danni shte otidat
+            //kato parameters na vikaniq ot requesta action (methoda, kojto obslujva requesta)!!!!!!!!
+            //v ASP>NET Core vseki method vryshta IActionResult, tova ni e malkata razlika s ASP.NET Core.
+            return response;
+        }
+
+        private static string GetParameterFromRequest(HttpRequest request, string parameterName)
+        {
+            if (request.FormData.ContainsKey(parameterName))
+            {
+                return request.FormData[parameterName];
+            }
+
+            if (request.QueryData.ContainsKey(parameterName))
+            {
+                return request.QueryData[parameterName];
+            }
+
+            //ASP.NET tyrsi ne samo v FormData i QueryData, no i v Headers, ama nie nqma da tyrsim tam.
+
+            return null;
         }
 
         private static void PrintRouteTable(List<Route> routeTable)

@@ -77,17 +77,22 @@ namespace MyFirstMVCApp.Controllers
         }
 
         [HttpPost("/Users/Register")] //posochvam pytq tuk, zashtoto Register e razlichno ot DoRegister!!!
-        public HttpResponse DoRegister()
+        public HttpResponse DoRegister(string username, string email, string password, string confirmPassword)
+            //podawam v constructora tova, ot koeto shte imam nujda, iskam da mi se dawat tezi parameter otvyn!!! A ne 
+            //az da gi izmykvam ot this.request.FromData[parameterName];
+            //vsichko, koeto mi trqbwa kato parameter na methoda, shte se tyrsi v samata zaqwka, v samiq request!!!!
+            //towa se naricha DataBinding!!! Realizirano e samoto vzimane na argumentite ot request.FormData v Host.cs!!!!
         {
             if (this.IsUserSignedIn())
             {
                 return this.Redirect("/");
             }
 
-            var username = this.Request.FormData["username"];
-            var email = this.Request.FormData["email"];
-            var password = this.Request.FormData["password"];
-            var confirmPassword = this.Request.FormData["confirmPassword"];
+            //zaradi DataBindinga veche nqma da e nujno az sama da si gi izvlicham tezi danni:
+            //var username = this.Request.FormData["username"];
+            //var email = this.Request.FormData["email"];
+            //var password = this.Request.FormData["password"];
+            //var confirmPassword = this.Request.FormData["confirmPassword"];
 
             //validations: tova e server-side validation!
             //rabota na UserController e da pravi tezi validations, ne e rabota na UserService tova!

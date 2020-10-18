@@ -23,6 +23,7 @@ namespace SUS.HTTP
             this.Headers = new List<Header>();
             this.Cookies = new List<Cookie>();
             this.FormData = new Dictionary<string, string>();
+            this.QueryData = new Dictionary<string, string>();
 
             var lines = requestString.Split(new string[] { HttpConstants.NewLine }, System.StringSplitOptions.None);
 
@@ -108,35 +109,65 @@ namespace SUS.HTTP
                 //this.session sa dannite za usera stoqsht sreshtu syotvetnoto sessionId!!!!
             }
 
-            this.Body = bodyBuilder.ToString().TrimEnd('\r', '\n'); //trimvam posledniqt nov red, kojto mi se slaga na body-to,
+            if (this.Path.Contains('?'))
+            {
+                var pathParts = this.Path.Split(new char[] { '?' }, 2, StringSplitOptions.RemoveEmptyEntries);
+                this.Path = pathParts[0];
+                this.QueryString = pathParts[1];
+            }
+            else
+            {
+                this.QueryString = null;
+            }
+
+            this.Body = bodyBuilder.ToString().TrimEnd('\r', '\n');
+            //trimvam posledniqt nov red, kojto mi se slaga na body-to,
             //zashtoto tozi nov red mi pravi \r\n nakravq na form dannite i taka passworda mi naprimer, ili
             //kakvoto pole se prashta posledno, se izprashta s edin \r\n nakraq zalepeni, a ako e pass, ne mi minawa validacii,
             //to i da ne e pass, pak e kofti rabota da si prashta po edin nov red az sama i to bez nujda!
 
-            if (this.Body != "")
+            if (this.Body != "" && this.Body != null)
             {
-                //var parameters = this.Body.Split('&');
-                var parameters = this.Body.Split(new char[] { '&' }, StringSplitOptions.RemoveEmptyEntries);
-                foreach (var parameter in parameters)
-                {
-                    var parameterParts = parameter.Split(new char[] { '=' }, 2, StringSplitOptions.RemoveEmptyEntries);
-                    var name = parameterParts[0];
-                    var value = 0.ToString();
 
-                    if (parameterParts.Length > 1)
-                    {
-                        value = WebUtility.UrlDecode(parameterParts[1]); //pravi mi normalen url string s ://, inache te sa zameneni s %3M i dr.podobni
-                    }
+                SplitParameters(this.Body, this.FormData);
 
-                    if (!this.FormData.ContainsKey(name))
-                    {
-                        this.FormData.Add(name, value);
-                    }
-                }
+            }
+
+            if (this.QueryString != "" && this.QueryString != null)
+            {
+                SplitParameters(this.QueryString, this.QueryData);
+
             }
         }
 
+        private static void SplitParameters(string parametersAsString, IDictionary<string, string> output)
+        {
+            var parameters = parametersAsString.Split(new char[] { '&' }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var parameter in parameters)
+            {
+                var parameterParts = parameter.Split(new char[] { '=' }, 2, StringSplitOptions.RemoveEmptyEntries);
+                var name = parameterParts[0];
+                var value = 0.ToString();
+
+                if (parameterParts.Length > 1)
+                {
+                    value = WebUtility.UrlDecode(parameterParts[1]); //pravi mi normalen url string s ://, inache te sa zameneni s %3M i dr.podobni
+                }
+
+                if (!output.ContainsKey(name))
+                {
+                    output.Add(name, value);
+                }
+            }
+        }   
+
         public string Path { get; set; }
+
+        public string QueryString { get; set; }
+        //Parameters na request mogat da se podawat ne samo prez FormData, a i prez addressa(url) pri GET zaqwka:
+        //https://localhost/users/register?id=123&serach=niki - towa se kazwa query string - tuk id=123 i serach=niki sa 
+        //parameters na zaqwkata.
+        //Ako vzema url i go splitna na 2 po?, shte moga da cheta i parameters ot nego.
 
         public HttpMethod Method { get; set; }
 
@@ -144,7 +175,11 @@ namespace SUS.HTTP
 
         public ICollection<Cookie> Cookies { get; set; }
 
+        //sybiram dannite ot Formite, koito mi se prashta v POST request ot forma:
         public IDictionary<string, string> FormData { get; set; }
+
+        //sybiram dannite ot QueryStringa, koito mi se prashta v GET request prez url:
+        public IDictionary<string, string> QueryData { get; set; }
 
         public Dictionary<string, string> Session { get; set; }
 

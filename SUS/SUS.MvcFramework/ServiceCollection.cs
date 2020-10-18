@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace SUS.MvcFramework
 {
@@ -9,17 +8,12 @@ namespace SUS.MvcFramework
     {
         private Dictionary<Type, Type> dependencyContainer = new Dictionary<Type, Type>();
 
-        public ServiceCollection()
-        {
-
-        }
-
         public void Add<TSource, TDestination>()
         {
             this.dependencyContainer[typeof(TSource)] = typeof(TDestination);
         }
 
-        public object CreateInstance(Type type) 
+        public object CreateInstance(Type type)
         {
             //iskam serviceCollectiona, kogato nqkoj mu poiska instanciq, toj da pravi instanciq, syobrazqwajki se s constructorite.
             //tozi method shte go polzwam tam, kydeto konstuiram controllera!!!
@@ -28,8 +22,12 @@ namespace SUS.MvcFramework
             {
                 type = this.dependencyContainer[type];
             }
+            //ako type-to ne e registrirano v dependencyContainera, az pak shte mu naprawq instanciq, zashtoto ne hvyrlqm greshka
+            //i taka ako nqkoj mi iska ApplicationDbContext v nqkoj constructor, az shte napravq takyv object i shte go instanciram,
+            //a nqma da mqtna greshka, poneje tozi type ApplicationDbContext NE E registriran
+            //v serviceCollectiona (dependencyContainera mi)!!!!!
 
-            //iskam tozi s naj-malko parameters, zashtoto toj naj-lesno moje da byde syzddaden.
+            //iskam constructora s naj-malko parameters, zashtoto toj naj-lesno moje da byde syzddaden.
             //v ASP.NET Core e analogichno, no tam se vzima pyrviqt, kojto moje da byde udovletvoren.
             //dobre e servica i controllera da imat po edin edinstwen constructor.
             var constructor = type.GetConstructors()

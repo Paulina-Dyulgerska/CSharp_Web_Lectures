@@ -27,7 +27,7 @@ namespace MyFirstMVCApp.Controllers
         }
 
         [HttpPost("/Cards/Add")]
-        public HttpResponse DoAdd()
+        public HttpResponse DoAdd(string name, string image, string keyword, string attack, string health, string description)
         {
             //Niki kaza da pravq tezi validacii dori i tuk v POST methodite, a ne samo v GET!!!!
             if (!this.IsUserSignedIn())
@@ -44,12 +44,12 @@ namespace MyFirstMVCApp.Controllers
 
             var card = new Card
             {
-                Name = this.Request.FormData["name"],
-                ImageUrl = this.Request.FormData["image"],
-                Keyword = this.Request.FormData["keyword"],
-                Attack = int.Parse(this.Request.FormData["attack"]),
-                Health = int.Parse(this.Request.FormData["health"]),
-                Description = this.Request.FormData["description"],
+                Name = name,
+                ImageUrl = image,
+                Keyword = keyword,
+                Attack = int.Parse(attack),
+                Health = int.Parse(health),
+                Description = description,
             };
 
             this.db.Cards.Add(card);
