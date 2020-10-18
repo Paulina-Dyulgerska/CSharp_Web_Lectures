@@ -106,7 +106,8 @@ namespace SUS.MvcFramework
                 //kakwo i kak da convertne:
                 //Convert vrysth null, ako ne uspee da convertne primitiven type, samo za string e vyzmojno da vyrne null kato 
                 //stojnost na stringa, t.e. ako imam null i ne e string type, znachi parameter.parameterType e ot slojen type!!!!
-                if (parameterValue == null && parameter.ParameterType != typeof(string))
+                if (parameterValue == null && parameter.ParameterType != typeof(string)
+                    && parameter.ParameterType != typeof(int?)) //moga da si izbroq i drugi primitivni types, koito mogat da sa null!
                 {
                     //complex type:
                     //pravq instanciq na complex type-to; vzimam vsichki propertyta na tozi complex type object;
