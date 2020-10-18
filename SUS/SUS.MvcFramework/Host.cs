@@ -140,12 +140,12 @@ namespace SUS.MvcFramework
         {
             if (request.FormData.Any(x=> x.Key.ToLower() == parameterName.ToLower()))
             {
-                return request.FormData[parameterName.ToLower()];
+                return request.FormData[parameterName];
             }
 
             if (request.QueryData.Any(x => x.Key.ToLower() == parameterName.ToLower()))
             {
-                return request.QueryData[parameterName.ToLower()];
+                return request.QueryData[parameterName];
             }
 
             //ASP.NET tyrsi ne samo v FormData i QueryData, no i v Headers, ama nie nqma da tyrsim tam.
@@ -162,6 +162,7 @@ namespace SUS.MvcFramework
                 System.Console.WriteLine($"{route.Method} {route.Path}");
             }
             System.Console.WriteLine("---End of routes in route table---");
+            Console.WriteLine();
         }
 
         private static void AutoRegisterStaticFile(List<Route> routeTable)

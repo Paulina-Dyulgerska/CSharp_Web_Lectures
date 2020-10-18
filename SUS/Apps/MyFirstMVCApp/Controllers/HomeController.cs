@@ -1,5 +1,4 @@
-﻿using MyFirstMVCApp.ViewModels.Home;
-using SUS.HTTP;
+﻿using SUS.HTTP;
 using SUS.MvcFramework;
 using System.Runtime.CompilerServices;
 

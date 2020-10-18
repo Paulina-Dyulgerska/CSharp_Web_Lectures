@@ -7,5 +7,6 @@
 
         public int CardId { get; set; }
         public virtual Card Card { get; set; }
+        public int Id { get; internal set; }
     }
 }

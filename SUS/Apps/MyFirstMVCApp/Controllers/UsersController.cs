@@ -23,7 +23,7 @@ namespace MyFirstMVCApp.Controllers
             //var responseBodyBytes = Encoding.UTF8.GetBytes(responseHtml);
             //return new HttpResponse("text/html", responseBodyBytes);
             //return this.View("Views/Users/Login");
-            
+
             //ako imam attributa [Authorize], kojto go ima v ASP.NET, nqma da pisha tezi raboti.....
             //ima i [Notauthorised] attribute syshto.
             if (this.IsUserSignedIn())
@@ -39,14 +39,21 @@ namespace MyFirstMVCApp.Controllers
         //<form class="mx-auto w-50" method="post"> v sluchaq prashta POST request na http://localhost:12345/Users/Login
         //NO, ako imam slojen attribute action, to formata shte izprati POST zaqwka kym posocheniqt v action url!!!!
         //<form class="mx-auto w-50" method="post" action="/users/check"> shte prati PORT zaqwka na http://localhost:12345/Users/Check
-        [HttpPost("/Users/Login")] //posochvam pytq tuk, zashtoto Login e razlichno ot DoLogin!!!
-        public HttpResponse DoLogin(string username, string password)
+        //[HttpPost("/Users/Login")] //posochvam pytq tuk, zashtoto Login e razlichno ot DoLogin!!!
+        //public HttpResponse DoLogin(string username, string password)
+        //kogato imam razlichni signaturi na methodite Login() i Login(string username, string password) moga da gi polzwam i 
+        //dwata, kato ediniq e pri GET, a drugiq e pri POST, no veche sa razlichni methodi i moga da polzwa edno ime za tqh,
+        //a kogato polzwam syshtoto ime, kakvoto mi e na addressa na url-to, to ne e nujno da pisha path v attributa,
+        //zatowa veche shte mahna path ot attributa i shte prekrystq methoda!!!
+        //POST /Users/Login
+        [HttpPost] // ne posochvam pytq tuk, zashtoto Login e syshtoto kato Login!!!
+        public HttpResponse Login(string username, string password)
         {
             if (this.IsUserSignedIn())
             {
                 return this.Redirect("/");
             }
-            
+
             //TODO: read data
             //TODO: check user
             //TODO: log user
@@ -74,12 +81,21 @@ namespace MyFirstMVCApp.Controllers
             return this.View();
         }
 
-        [HttpPost("/Users/Register")] //posochvam pytq tuk, zashtoto Register e razlichno ot DoRegister!!!
-        public HttpResponse DoRegister(string username, string email, string password, string confirmPassword)
-            //podawam v constructora tova, ot koeto shte imam nujda, iskam da mi se dawat tezi parameter otvyn!!! A ne 
-            //az da gi izmykvam ot this.request.FromData[parameterName];
-            //vsichko, koeto mi trqbwa kato parameter na methoda, shte se tyrsi v samata zaqwka, v samiq request!!!!
-            //towa se naricha DataBinding!!! Realizirano e samoto vzimane na argumentite ot request.FormData v Host.cs!!!!
+        //[HttpPost("/Users/Register")] //posochvam pytq tuk, zashtoto Register e razlichno ot DoRegister!!!
+        //moqt method se kazwashe v nachaloto DoRegister, zashoto nqmashe parametri i nqmashe kak da go krystq kato 
+        //gorniq Register pri GET, kojto se vika. No kato vzeh parametrite ot formata, veche imam argumenti na methoda i
+        //moga da go prekrystq na Register!!!
+        //kogato veche imam razlichni argumenti na methoda Register pri Get i razlichni pri Post, moga da mahna 
+        //tozi path ot attributa i da ostavq samo vida na zaqwkata, zashoto te shte sa dva razlichni method i az
+        //shte gi krystq s edno i syshto ime, no shte imat razlichni parametri!!!
+        //public HttpResponse DoRegister(string username, string email, string password, string confirmPassword)
+        //POST /Users/Register
+        [HttpPost] //ne posochvam pytq tuk, zashtoto Register e syshtoto kato Register!!!
+        public HttpResponse Register(string username, string email, string password, string confirmPassword)
+        //podawam v constructora tova, ot koeto shte imam nujda, iskam da mi se dawat tezi parameter otvyn!!! A ne 
+        //az da gi izmykvam ot this.request.FromData[parameterName];
+        //vsichko, koeto mi trqbwa kato parameter na methoda, shte se tyrsi v samata zaqwka, v samiq request!!!!
+        //towa se naricha DataBinding!!! Realizirano e samoto vzimane na argumentite ot request.FormData v Host.cs!!!!
         {
             if (this.IsUserSignedIn())
             {
