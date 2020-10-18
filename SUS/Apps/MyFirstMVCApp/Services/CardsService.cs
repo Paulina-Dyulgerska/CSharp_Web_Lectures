@@ -70,7 +70,14 @@ namespace MyFirstMVCApp.Services
                 return;
             }
 
-            this.db.UserCards.Remove(new UserCard { CardId = cardId, UserId = userId });
+            this.db.UserCards.Add(new UserCard { CardId = cardId, UserId = userId });
+
+            //var user = this.db.Users.FirstOrDefault(x => x.Id == userId);
+            //var card = this.db.Cards.FirstOrDefault(x => x.Id == cardId);
+            //var usercard = new UserCard { User = user, Card = card };
+
+            //user.Cards.Add(usercard);
+
             this.db.SaveChanges();
         }
 
@@ -83,10 +90,37 @@ namespace MyFirstMVCApp.Services
             if (userCard == null)
             {
                 return;
-            }
+            }   
 
             this.db.UserCards.Remove(userCard);
             this.db.SaveChanges();
         }
+
+        //public void AddCardToUserCollection(string userId, int cardId)
+        //{
+        //    if (this.db.UserCards.Any(x => x.UserId == userId && x.CardId == cardId))
+        //    {
+        //        return;
+        //    }
+
+        //    this.db.UserCards.Add(new UserCard
+        //    {
+        //        CardId = cardId,
+        //        UserId = userId,
+        //    });
+        //    this.db.SaveChanges();
+        //}
+
+        //public void RemoveCardFromUserCollection(string userId, int cardId)
+        //{
+        //    var userCard = this.db.UserCards.FirstOrDefault(x => x.UserId == userId && x.CardId == cardId);
+        //    if (userCard == null)
+        //    {
+        //        return;
+        //    }
+
+        //    this.db.UserCards.Remove(userCard);
+        //    this.db.SaveChanges();
+        //}
     }
 }

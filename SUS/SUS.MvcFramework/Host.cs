@@ -140,12 +140,22 @@ namespace SUS.MvcFramework
         {
             if (request.FormData.Any(x=> x.Key.ToLower() == parameterName.ToLower()))
             {
-                return request.FormData[parameterName];
+                return request.FormData
+                    .FirstOrDefault(x => x.Key.ToLower() == parameterName.ToLower()).Value;
             }
 
             if (request.QueryData.Any(x => x.Key.ToLower() == parameterName.ToLower()))
             {
-                return request.QueryData[parameterName];
+                return request.QueryData.FirstOrDefault(x => x.Key.ToLower() == parameterName.ToLower()).Value;
+                //return request.QueryData[parameterName.ToLower()]; //tova ne trqbwa da go pravq taka, za da mi se 
+                //zapazqt Key-ovete vyv vida, v kojto sa doshli ot cshtml-a!!!!! Ponqkoga te sa samo s malki bukvi,
+                //a ponqkoga da camelCase, a az ako gi slagam tuk da mi se vryshtat samo na ToLower() znachi, che taka shte si gi
+                //zapisvam v FormData i QueryData dictionarytata, no v nqkoq Get request moje da mi e napisano neshto camelCase
+                //v url-to i az ako go zapisa ToLower(), posle v methoda, kojto gi iska, shte se tyrsi camelCase dumata,
+                //a az shte imam samo lower-case dumata i nishto nqma da mi se namira v dictionaryto!!!! Syshtiqt problem
+                //moje da stane i ako v nqkoj Post request imam input pole s camelCase name. Zatowa ne gi pravq taka da se
+                //zapisvat, a samo taka gi tyrsq i vadq ot dictionaryto, no gi zaspisvam v dictionaryto taka, kakto sa mi 
+                //podadeni kato bukvi!!!!
             }
 
             //ASP.NET tyrsi ne samo v FormData i QueryData, no i v Headers, ama nie nqma da tyrsim tam.

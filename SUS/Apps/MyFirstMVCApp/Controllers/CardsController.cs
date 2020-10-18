@@ -143,6 +143,7 @@ namespace MyFirstMVCApp.Controllers
             }
 
             var userId = this.GetUserId();
+            
             this.cardsService.AddCardToUserCollection(userId, cardId);
 
             return this.Redirect("/Cards/All");
