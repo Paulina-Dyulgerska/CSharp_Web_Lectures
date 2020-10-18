@@ -95,7 +95,33 @@ namespace SUS.MvcFramework
             var parameters = action.GetParameters();
             foreach (var parameter in parameters)
             {
-                var parameterValue = GetParameterFromRequest(request, parameter.Name);
+                var httpParameterValue = GetParameterFromRequest(request, parameter.Name);
+                //iskam da mi conventira typa na polucheniq ot forma ili querystring parameter, kym typa na parametyra sys syshtoto
+                //ime, kojto parameter se iska ot actiona (methoda izvikvan ot requesta)!!!!
+                //parameter.ParameterType e typa na parametera ot methoda, a httpParameterValue e stringovata stojnost na 
+                //parametera, kojto mi e doshil s forma ili querystring ot requesta ot usera!!!
+                var parameterValue = Convert.ChangeType(httpParameterValue, parameter.ParameterType);
+                //Convert NE RAZBIRA ot slojni types, a samo ot primitivni types kato int, string i t.n.
+                //ako iskam da moga da rabotq s AddCardInputModel, vmesto sys 100 parameters pootdelno, trqbwa da mu kaja kym
+                //kakwo i kak da convertne:
+                //Convert vrysth null, ako ne uspee da convertne primitiven type, samo za string e vyzmojno da vyrne null kato 
+                //stojnost na stringa, t.e. ako imam null i ne e string type, znachi parameter.parameterType e ot slojen type!!!!
+                if (parameterValue == null && parameter.ParameterType != typeof(string))
+                {
+                    //complex type:
+                    //pravq instanciq na complex type-to; vzimam vsichki propertyta na tozi complex type object;
+                    //za vsqko property ot complex type-to wzimam onzi parameter ot requesta, kojto ima syshtoto ime kato propertyto;
+                    //Convertvam valueto na propertyto ot requesta kym type-to na propertyto ot complex objecta;
+                    //zapisvam valueto na namereniq parameter ot requesta v syotvetnoto property sys syshtoto ime;
+                    parameterValue = Activator.CreateInstance(parameter.ParameterType);
+                    var properties = parameter.ParameterType.GetProperties();
+                    foreach (var property in properties)
+                    {
+                        var propertyHttpParameterValue = GetParameterFromRequest(request, property.Name);
+                        var propertyParameterValue = Convert.ChangeType(propertyHttpParameterValue, property.PropertyType);
+                        property.SetValue(parameterValue, propertyParameterValue);
+                    }
+                }
                 arguments.Add(parameterValue);
             }
 
@@ -111,14 +137,14 @@ namespace SUS.MvcFramework
 
         private static string GetParameterFromRequest(HttpRequest request, string parameterName)
         {
-            if (request.FormData.ContainsKey(parameterName))
+            if (request.FormData.Any(x=> x.Key.ToLower() == parameterName.ToLower()))
             {
-                return request.FormData[parameterName];
+                return request.FormData[parameterName.ToLower()];
             }
 
-            if (request.QueryData.ContainsKey(parameterName))
+            if (request.QueryData.Any(x => x.Key.ToLower() == parameterName.ToLower()))
             {
-                return request.QueryData[parameterName];
+                return request.QueryData[parameterName.ToLower()];
             }
 
             //ASP.NET tyrsi ne samo v FormData i QueryData, no i v Headers, ama nie nqma da tyrsim tam.

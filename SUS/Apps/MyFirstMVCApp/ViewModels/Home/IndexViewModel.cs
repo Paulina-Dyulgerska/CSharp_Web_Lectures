@@ -1,6 +1,6 @@
 ﻿
 
-namespace MyFirstMVCApp.ViewModels
+namespace MyFirstMVCApp.ViewModels.Home
 {
     public class IndexViewModel
     {

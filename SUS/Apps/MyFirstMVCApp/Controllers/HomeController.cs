@@ -1,7 +1,6 @@
-﻿using MyFirstMVCApp.ViewModels;
+﻿using MyFirstMVCApp.ViewModels.Home;
 using SUS.HTTP;
 using SUS.MvcFramework;
-using System;
 using System.Runtime.CompilerServices;
 
 namespace MyFirstMVCApp.Controllers

@@ -40,7 +40,7 @@ namespace MyFirstMVCApp.Controllers
         //NO, ako imam slojen attribute action, to formata shte izprati POST zaqwka kym posocheniqt v action url!!!!
         //<form class="mx-auto w-50" method="post" action="/users/check"> shte prati PORT zaqwka na http://localhost:12345/Users/Check
         [HttpPost("/Users/Login")] //posochvam pytq tuk, zashtoto Login e razlichno ot DoLogin!!!
-        public HttpResponse DoLogin()
+        public HttpResponse DoLogin(string username, string password)
         {
             if (this.IsUserSignedIn())
             {
@@ -51,8 +51,6 @@ namespace MyFirstMVCApp.Controllers
             //TODO: check user
             //TODO: log user
 
-            var username = this.Request.FormData["username"];
-            var password = this.Request.FormData["password"];
             var userId = this.usersService.GetUserId(username, password);
 
             if (userId == null)

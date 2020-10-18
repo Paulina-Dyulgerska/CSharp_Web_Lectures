@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
-namespace MyFirstMVCApp.ViewModels
+namespace MyFirstMVCApp.ViewModels.Cards
 {
     public class AllCardsViewModel
     {

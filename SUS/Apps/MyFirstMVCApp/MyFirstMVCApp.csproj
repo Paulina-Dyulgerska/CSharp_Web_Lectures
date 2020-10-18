@@ -76,7 +76,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="ViewModels\DoAddViewModel.cs">
+    <Compile Update="ViewModels\Cards\DoAddViewModel.cs">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Compile>
   </ItemGroup>

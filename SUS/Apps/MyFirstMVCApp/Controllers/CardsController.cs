@@ -1,5 +1,6 @@
 ﻿using MyFirstMVCApp.Data;
-using MyFirstMVCApp.ViewModels;
+using System;
+using MyFirstMVCApp.ViewModels.Cards;
 using SUS.HTTP;
 using SUS.MvcFramework;
 using System.Linq;
@@ -27,7 +28,9 @@ namespace MyFirstMVCApp.Controllers
         }
 
         [HttpPost("/Cards/Add")]
-        public HttpResponse DoAdd(string name, string image, string keyword, string attack, string health, string description)
+        //towa e without InputModel type!!:
+        //public HttpResponse DoAdd(string name, string image, string keyword, int attack, int health, string description)
+        public HttpResponse DoAdd(AddCardInputModel cardInputModel)
         {
             //Niki kaza da pravq tezi validacii dori i tuk v POST methodite, a ne samo v GET!!!!
             if (!this.IsUserSignedIn())
@@ -44,12 +47,12 @@ namespace MyFirstMVCApp.Controllers
 
             var card = new Card
             {
-                Name = name,
-                ImageUrl = image,
-                Keyword = keyword,
-                Attack = int.Parse(attack),
-                Health = int.Parse(health),
-                Description = description,
+                Name = cardInputModel.Name,
+                ImageUrl = cardInputModel.Image,
+                Keyword = cardInputModel.Keyword,
+                Attack = cardInputModel.Attack,
+                Health = cardInputModel.Health,
+                Description = cardInputModel.Description,
             };
 
             this.db.Cards.Add(card);

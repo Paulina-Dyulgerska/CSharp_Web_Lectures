@@ -1,4 +1,4 @@
-﻿namespace MyFirstMVCApp.ViewModels
+﻿namespace MyFirstMVCApp.ViewModels.Cards
 {
     public class DoAddViewModel
     {

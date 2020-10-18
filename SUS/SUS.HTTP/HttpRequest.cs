@@ -128,15 +128,12 @@ namespace SUS.HTTP
 
             if (this.Body != "" && this.Body != null)
             {
-
                 SplitParameters(this.Body, this.FormData);
-
             }
 
             if (this.QueryString != "" && this.QueryString != null)
             {
                 SplitParameters(this.QueryString, this.QueryData);
-
             }
         }
 
