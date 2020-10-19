@@ -1,4 +1,5 @@
 ﻿using MyFirstMVCApp.Services;
+using MyFirstMVCApp.ViewModels.Users;
 using SUS.HTTP;
 using SUS.MvcFramework;
 using System.ComponentModel.DataAnnotations;
@@ -91,7 +92,7 @@ namespace MyFirstMVCApp.Controllers
         //public HttpResponse DoRegister(string username, string email, string password, string confirmPassword)
         //POST /Users/Register
         [HttpPost] //ne posochvam pytq tuk, zashtoto Register e syshtoto kato Register!!!
-        public HttpResponse Register(string username, string email, string password, string confirmPassword)
+        public HttpResponse Register(RegisterInputModel input)
         //podawam v constructora tova, ot koeto shte imam nujda, iskam da mi se dawat tezi parameter otvyn!!! A ne 
         //az da gi izmykvam ot this.request.FromData[parameterName];
         //vsichko, koeto mi trqbwa kato parameter na methoda, shte se tyrsi v samata zaqwka, v samiq request!!!!
@@ -110,43 +111,43 @@ namespace MyFirstMVCApp.Controllers
 
             //validations: tova e server-side validation!
             //rabota na UserController e da pravi tezi validations, ne e rabota na UserService tova!
-            if (username == null || username.Length < 5 || username.Length > 20)
+            if (input.Username == null || input.Username.Length < 5 || input.Username.Length > 20)
             {
                 return this.Error("Invalid username. Username should be between 5 and 20 characters.");
             }
 
-            if (!Regex.IsMatch(username, @"^[a-zA-Z0-9\.]+$"))
+            if (!Regex.IsMatch(input.Username, @"^[a-zA-Z0-9\.]+$"))
             {
                 return this.Error("Invalid username. Only alphanumeric characters and dot are allowed.");
             }
 
             //proverqwam blagodarenie na dyrjavniq attribute, dali emaila pone prilicha na validen email address:
-            if (string.IsNullOrWhiteSpace(email) || !new EmailAddressAttribute().IsValid(email))
+            if (string.IsNullOrWhiteSpace(input.Email) || !new EmailAddressAttribute().IsValid(input.Email))
             {
                 return this.Error("Invalid email.");
             }
 
-            if (password == null || password.Length < 6 || password.Length > 20)
+            if (input.Password == null || input.Password.Length < 6 || input.Password.Length > 20)
             {
                 return this.Error("Invalid password. Password must be between 6 and 20 characters.");
             }
 
-            if (password != confirmPassword)
+            if (input.Password != input.ConfirmPassword)
             {
                 return this.Error("Passwords should be the same.");
             }
 
-            if (!this.usersService.IsUsernameAvailable(username))
+            if (!this.usersService.IsUsernameAvailable(input.Username))
             {
                 return this.Error("Username already taken.");
             }
 
-            if (!this.usersService.IsEmailAvailable(email))
+            if (!this.usersService.IsEmailAvailable(input.Email))
             {
                 this.Error("This email is already registered.");
             }
 
-            var userId = this.usersService.CreateUser(username, password, email);
+            var userId = this.usersService.CreateUser(input.Username, input.Password, input.Email);
             //this.SignIn(userId);//po uslovie mi iskat da pratq potrebitelq kym Login stranicata, t.e. ne trqbwa da mi e
             //lognat tuk.....
 

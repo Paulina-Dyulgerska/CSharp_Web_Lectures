@@ -72,12 +72,14 @@ namespace MyFirstMVCApp.Services
                 return;
             }
 
+            //po-lesno e da dobavq prez mejdinnata tablica, otkolkoto prez user i negovite Cards!!!
             this.db.UserCards.Add(new UserCard { CardId = cardId, UserId = userId });
 
+            //taka se dobavq card prez collectiona Cards na user-a - towa e po-typo, otkolkoto gornoto dobavqne!!! I po-bavno 
+            //s poveche zaqwki!!!!
             //var user = this.db.Users.FirstOrDefault(x => x.Id == userId);
             //var card = this.db.Cards.FirstOrDefault(x => x.Id == cardId);
             //var usercard = new UserCard { User = user, Card = card };
-
             //user.Cards.Add(usercard);
 
             this.db.SaveChanges();
