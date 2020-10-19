@@ -43,6 +43,8 @@ namespace SUS.MvcFramework
                 //za vseki parameter na constructora, izvikaj tozi method recursivno kato parameter na methoda shte byde 
                 //typa na parametera na construktora. Taka edin sled drug shte se izpylnqwa methoda za wseki edin parameter
                 //na constructora i na constructora na parametera i za constructora na parametera na parameterea i t.n.
+                //taka ot controllerskiq constructor se iska iservice, toj se pravi, no servickiq constructor iska db context,
+                //db contexta se pravi!!!! Taka ot edin controller se stiga do DB-to!!!!
                 parameterValues.Add(parameterValue);
             }
 
