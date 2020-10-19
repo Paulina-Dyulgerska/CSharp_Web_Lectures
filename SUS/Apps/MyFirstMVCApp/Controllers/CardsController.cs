@@ -82,7 +82,9 @@ namespace MyFirstMVCApp.Controllers
                 return this.Error("Description is required and its length must be at most 200 characters.");
             }
 
-            this.cardsService.AddCard(cardInputModel);
+            var cardId = this.cardsService.AddCard(cardInputModel);
+
+            this.cardsService.AddCardToUserCollection(this.GetUserId(), cardId);
 
             return this.Redirect("/Cards/All");
 
@@ -143,7 +145,7 @@ namespace MyFirstMVCApp.Controllers
             }
 
             var userId = this.GetUserId();
-            
+
             this.cardsService.AddCardToUserCollection(userId, cardId);
 
             return this.Redirect("/Cards/All");

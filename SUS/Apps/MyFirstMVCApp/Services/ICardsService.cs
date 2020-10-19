@@ -5,7 +5,7 @@ namespace MyFirstMVCApp.Services
 {
     public interface ICardsService
     {
-        void AddCard(AddCardInputModel input);
+        int AddCard(AddCardInputModel input);
 
         IEnumerable<CardViewModel> GetAll();
 

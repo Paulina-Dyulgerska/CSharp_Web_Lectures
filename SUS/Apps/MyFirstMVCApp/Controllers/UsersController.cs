@@ -147,9 +147,10 @@ namespace MyFirstMVCApp.Controllers
             }
 
             var userId = this.usersService.CreateUser(username, password, email);
-            this.SignIn(userId);
+            //this.SignIn(userId);//po uslovie mi iskat da pratq potrebitelq kym Login stranicata, t.e. ne trqbwa da mi e
+            //lognat tuk.....
 
-            return this.Redirect("/");
+            return this.Redirect("/Users/Login");
         }
 
         //GET /Users/Logout

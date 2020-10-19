@@ -15,7 +15,7 @@ namespace MyFirstMVCApp.Services
             this.db = db;
         }
 
-        public void AddCard(AddCardInputModel input)
+        public int AddCard(AddCardInputModel input)
         {
             var card = new Card
             {
@@ -30,6 +30,8 @@ namespace MyFirstMVCApp.Services
             this.db.Cards.Add(card);
 
             this.db.SaveChanges();
+
+            return card.Id;
         }
 
         public IEnumerable<CardViewModel> GetAll()
