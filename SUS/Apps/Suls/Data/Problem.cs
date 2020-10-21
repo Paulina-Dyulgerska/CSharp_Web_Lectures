@@ -19,7 +19,7 @@ namespace Suls.Data
         public string Name { get; set; }
 
         [Required]
-        public ushort Point { get; set; }
+        public ushort Points { get; set; }
 
         public virtual ICollection<Submission> Submissions { get; set; }
     }

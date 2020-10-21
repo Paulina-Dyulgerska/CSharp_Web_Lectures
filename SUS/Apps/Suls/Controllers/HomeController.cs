@@ -1,18 +1,25 @@
-﻿using Suls.ViewModel.Problems;
+﻿using Suls.Services;
 using SUS.HTTP;
 using SUS.MvcFramework;
-using System.Collections.Generic;
 
 namespace Suls.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly IProblemsService problemsService;
+
+        public HomeController(IProblemsService problemsService)
+        {
+            this.problemsService = problemsService;
+        }
+
         [HttpGet("/")] //ne isma /Home/Index, a /
         public HttpResponse Index()
         {
             if (this.IsUserSignedIn())
             {
-                return this.View(new List<HomePageProblemViewModel>(), "IndexLoggedIn");
+                var viewModel = this.problemsService.GetAll();
+                return this.View(viewModel, "IndexLoggedIn");
             }
             else
             {
