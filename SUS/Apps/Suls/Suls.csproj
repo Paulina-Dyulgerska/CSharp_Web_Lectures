@@ -20,7 +20,6 @@
 
   <ItemGroup>
     <Folder Include="ViewModel\Submissions\" />
-    <Folder Include="ViewModel\Problems\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

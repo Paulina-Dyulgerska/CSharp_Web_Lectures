@@ -1,19 +1,23 @@
-﻿using SUS.HTTP;
+﻿using Suls.ViewModel.Problems;
+using SUS.HTTP;
 using SUS.MvcFramework;
+using System.Collections.Generic;
 
 namespace Suls.Controllers
 {
     public class HomeController : Controller
     {
-        public HomeController()
-        {
-
-        }
-
         [HttpGet("/")] //ne isma /Home/Index, a /
         public HttpResponse Index()
         {
-            return this.View(); //Views/Home/Index.cshtml vikam
+            if (this.IsUserSignedIn())
+            {
+                return this.View(new List<HomePageProblemViewModel>(), "IndexLoggedIn");
+            }
+            else
+            {
+                return this.View(); //Views/Home/Index.cshtml vikam
+            }
         }
     }
 }
