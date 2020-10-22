@@ -1,5 +1,6 @@
 ﻿namespace SharedTrip
 {
+    using SharedTrip.Data;
     using SUS.MvcFramework;
     using System.Threading.Tasks;
 
