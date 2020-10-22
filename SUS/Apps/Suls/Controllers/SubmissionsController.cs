@@ -21,6 +21,11 @@ namespace Suls.Controllers
 
         public HttpResponse Create(string id)
         {
+            if (!this.IsUserSignedIn())
+            {
+                return this.Redirect("/Users/Login");
+            }
+
             var viewModel = new CreateViewModel
             {
                 Name = this.problemsService.GetNameById(id),
@@ -32,6 +37,11 @@ namespace Suls.Controllers
         [HttpPost]
         public HttpResponse Create(string problemId, string code)
         {
+            if (!this.IsUserSignedIn())
+            {
+                return this.Redirect("/Users/Login");
+            }
+
             if (string.IsNullOrWhiteSpace(code) || code.Length < 30 || code.Length > 800)
             {
                 return this.Error("Code shoul be between 30 and 800 characters long.");
@@ -44,9 +54,14 @@ namespace Suls.Controllers
 
         public HttpResponse Delete(string id)
         {
+            if (!this.IsUserSignedIn())
+            {
+                return this.Redirect("/Users/Login");
+            }
+
             this.submissionsService.Delete(id);
 
-            return this.Redirect("/Problems/Details");
+            return this.Redirect("/");
         }
     }
 }

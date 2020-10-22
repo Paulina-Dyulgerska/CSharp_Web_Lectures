@@ -13,5 +13,7 @@ namespace Suls.ViewModel.Problems
         public int MaxPoints { get; set; }
 
         public DateTime CreatedOn { get; set; }
+
+        public int Percentage => (int)Math.Round(this.AchievedResult * 100M / this.MaxPoints);
     }
 }

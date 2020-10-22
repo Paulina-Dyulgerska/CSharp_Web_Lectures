@@ -15,12 +15,22 @@ namespace Suls.Controllers
 
         public HttpResponse Create()
         {
+            if (!this.IsUserSignedIn())
+            {
+                return this.Redirect("/Users/Login");
+            }
+
             return this.View();
         }
 
         [HttpPost]
         public HttpResponse Create(string name, int points)
         {
+            if (!this.IsUserSignedIn())
+            {
+                return this.Redirect("/Users/Login");
+            }
+            
             if (string.IsNullOrWhiteSpace(name) || name.Length < 5 || name.Length >20)
             {
                 return this.Error("Name should be between 5 and 20 characters long.");
@@ -31,7 +41,6 @@ namespace Suls.Controllers
                 return this.Error("Points should be an integer number between 50 and 300.");
             }
 
-
             this.problemsService.Create(name, (ushort)points);
 
             return this.Redirect("/");
@@ -39,6 +48,11 @@ namespace Suls.Controllers
 
         public HttpResponse Details(string id)
         {
+            if (!this.IsUserSignedIn())
+            {
+                return this.Redirect("/Users/Login");
+            }
+
             var viewModel = this.problemsService.GetAllByProblemId(id);
 
             return this.View(viewModel);
