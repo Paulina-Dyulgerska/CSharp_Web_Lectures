@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/css/bootstrap.css" />
     <style>
-        .alert{margin-top:100px}
+        .alert {            margin-top: 100px        }
     </style>
 </head>
 <body>
@@ -18,15 +18,20 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ml-auto">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="/">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/Users/Login">Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/Users/Register">Register</a>
-                    </li>
+                    @if (User == null)
+                    {
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Users/Login">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Users/Register">Register</a>
+                        </li>
+                    }
+                    @else
+                    {
                     <li class="nav-item">
                         <a class="nav-link" href="/Trips/All">Trips</a>
                     </li>
@@ -36,6 +41,7 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/Users/Logout">Logout</a>
                     </li>
+                    }
                 </ul>
             </div>
         </div>

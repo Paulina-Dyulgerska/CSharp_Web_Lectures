@@ -17,6 +17,7 @@
         public void ConfigureServices(IServiceCollection serviceCollection)
         {
             serviceCollection.Add<IUserService, UserService>();
+            serviceCollection.Add<ITripService, TripService>();
         }
     }
 }
