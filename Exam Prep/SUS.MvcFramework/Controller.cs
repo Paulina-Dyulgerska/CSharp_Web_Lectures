@@ -25,7 +25,8 @@ namespace SUS.MvcFramework
                 "Views/" + 
                 this.GetType().Name.Replace("Controller", string.Empty) + 
                 "/" + viewPath + ".cshtml");
-            viewContent = this.viewEngine.GetHtml(viewContent, viewModel, this.GetUserId());
+            viewContent = this.viewEngine.GetHtml(viewContent, viewModel, this.GetUserId()); //tova this.GetUserId mi e User-a
+            //kojto vikam v _Layout-a - towa e prosto string, kojto e id-to na usera, ama sym go krystila User v VIewClass-a mi!!!
 
             var responseHtml = this.PutViewInLayout(viewContent, viewModel);
 
