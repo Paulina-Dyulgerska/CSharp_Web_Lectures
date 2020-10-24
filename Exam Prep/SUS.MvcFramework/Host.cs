@@ -83,7 +83,7 @@ namespace SUS.MvcFramework
             {
                 var httpParamerValue = GetParameterFromRequest(request, parameter.Name);
                 var parameterValue = Convert.ChangeType(httpParamerValue, parameter.ParameterType);
-                if (parameterValue == null && 
+                if (parameterValue == null &&
                     parameter.ParameterType != typeof(string)
                     && parameter.ParameterType != typeof(int?))
                 {
@@ -97,7 +97,7 @@ namespace SUS.MvcFramework
                         property.SetValue(parameterValue, propertyParameterValue);
                     }
                 }
-                
+
                 arguments.Add(parameterValue);
             }
 

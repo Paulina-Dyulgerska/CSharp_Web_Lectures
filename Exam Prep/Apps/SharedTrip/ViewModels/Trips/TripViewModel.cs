@@ -15,7 +15,7 @@ namespace SharedTrip.ViewModels.Trips
 
         public DateTime DepartureTime { get; set; }
 
-        public string DetartureTimeFormated => this.DepartureTime.ToString(CultureInfo.GetCultureInfo("bg-BG"));
+        public string DetartureTimeFormatted => this.DepartureTime.ToString(CultureInfo.GetCultureInfo("bg-BG"));
         //public string DetartureTimeFormated => this.DepartureTime.ToString("dd.MM.yyyy HH:mm");
 
         public int AvailableSeats { get; set; }

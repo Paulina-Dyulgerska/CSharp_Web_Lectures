@@ -32,7 +32,7 @@ namespace SUS.MvcFramework.ViewEngine
                     var modelName = viewModel.GetType().FullName;
                     var genericArguments = viewModel.GetType().GenericTypeArguments;
                     typeOfModel = modelName.Substring(0, modelName.IndexOf('`'))
-                        + "<" + string.Join(",", genericArguments.Select(x => x.FullName)) +">";
+                        + "<" + string.Join(",", genericArguments.Select(x => x.FullName)) + ">";
                 }
                 else
                 {
@@ -90,7 +90,7 @@ namespace ViewNamespace
                 else
                 {
                     csharpCode.Append($"html.AppendLine(@\"");
-   
+                    //< td > @trip.DepartureTime.ToString("s") </ td >
                     while (line.Contains("@"))
                     {
                         var atSignLocation = line.IndexOf("@");
@@ -141,7 +141,7 @@ namespace ViewNamespace
             }
 
             compileResult = compileResult.AddSyntaxTrees(SyntaxFactory.ParseSyntaxTree(csharpCode));
-             
+
             using (MemoryStream memoryStream = new MemoryStream())
             {
                 EmitResult result = compileResult.Emit(memoryStream);
