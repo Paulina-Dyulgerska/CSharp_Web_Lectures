@@ -13,7 +13,7 @@ namespace Suls.Controllers
             this.problemsService = problemsService;
         }
 
-        [HttpGet("/")] //ne isma /Home/Index, a /
+        [HttpGet("/")] //ne iskam /Home/Index, a /
         public HttpResponse Index()
         {
             if (this.IsUserSignedIn())
