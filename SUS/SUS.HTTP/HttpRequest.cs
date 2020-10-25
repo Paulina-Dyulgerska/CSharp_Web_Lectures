@@ -156,7 +156,7 @@ namespace SUS.HTTP
                     output.Add(name, value);
                 }
             }
-        }   
+        }
 
         public string Path { get; set; }
 
