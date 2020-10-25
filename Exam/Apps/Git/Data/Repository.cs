@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace Git.Data
 {
@@ -25,12 +23,10 @@ namespace Git.Data
         public bool IsPublic { get; set; }
 
         [Required]
-        //[ForeignKey(nameof(User))]
         public string OwnerId { get; set; }
 
         public virtual User Owner { get; set; }
 
         public virtual ICollection<Commit> Commits { get; set; }
-
     }
 }

@@ -34,7 +34,7 @@ namespace SUS.MvcFramework
             Console.WriteLine("Requests:");
             IHttpServer server = new HttpServer(routeTable);
 
-            Process.Start(@"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe", "http://localhost/");
+            //Process.Start(@"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe", "http://localhost/");
             await server.StartAsync(port);
         }
 

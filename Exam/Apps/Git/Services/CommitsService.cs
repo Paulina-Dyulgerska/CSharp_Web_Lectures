@@ -3,7 +3,6 @@ using Git.ViewModels.Commits;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Git.Services
 {
@@ -48,7 +47,5 @@ namespace Git.Services
                     RepositoryId = x.RepositoryId,
                 }).ToList();
         }
-
-
     }
 }

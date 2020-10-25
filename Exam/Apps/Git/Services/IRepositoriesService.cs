@@ -1,8 +1,6 @@
 ﻿using Git.ViewModels.Commits;
 using Git.ViewModels.Repositories;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Git.Services
 {
@@ -11,7 +9,6 @@ namespace Git.Services
         void Create(string name, string repositoryType, string userId);
 
         CommitInputModel GetById(string id);
-
 
         IEnumerable<RepositoryViewModel> GetAll();
     }

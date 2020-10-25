@@ -2,10 +2,7 @@
 using Git.ViewModels.Users;
 using SUS.HTTP;
 using SUS.MvcFramework;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Git.Controllers
@@ -118,6 +115,7 @@ namespace Git.Controllers
             }
 
             this.SignOut();
+            
             return this.Redirect("/");
         }
     }

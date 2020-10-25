@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Git.ViewModels.Commits
+﻿namespace Git.ViewModels.Commits
 {
     public class CommitViewModel
     {

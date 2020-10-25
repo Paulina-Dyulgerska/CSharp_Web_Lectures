@@ -30,15 +30,14 @@
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>()
-     .HasMany(u => u.Repositories)
-     .WithOne(a => a.Owner)
-     .OnDelete(DeleteBehavior.Restrict);
+                 .HasMany(u => u.Repositories)
+                 .WithOne(a => a.Owner)
+                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<User>()
-.HasMany(u => u.Commits)
-.WithOne(a => a.Creator)
-.OnDelete(DeleteBehavior.Restrict);
-
+                .HasMany(u => u.Commits)
+                .WithOne(a => a.Creator)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
