@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Git.ViewModels
+namespace Git.ViewModels.Repositories
 {
-    public class CommitViewModel
+    public class RepositoryInputModel
     {
     }
 }
